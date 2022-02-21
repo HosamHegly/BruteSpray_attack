@@ -6,7 +6,8 @@ def brute(parameters):
                'method': parameters['method'],
                'user_param': parameters['user_param'],
                'password_param': parameters['password_param'],
-               'fail_text': parameters['fail_text']}
+               'fail_text': parameters['fail_text'],
+               }
     if parameters['user_list']:
         for user in parameters['user_list']:
             content['username'] = user
@@ -54,8 +55,7 @@ def attack(content):
 
 
 def check_login(request):
-    if request.text.__contains__('(test)'):
-
+    if 'Dashboard' in request.text:
         return True
     if request.text.__contains__('token'):
         return True

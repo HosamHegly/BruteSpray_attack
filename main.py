@@ -1,9 +1,9 @@
 import argparse
 
-import requests
 from colored import fg, bg, attr, stylize
 
 import attack
+
 
 
 class LoginBrute:
@@ -46,7 +46,7 @@ class LoginBrute:
         parser.add_argument('-P', '--password', type=str, help='specify the password for the login')
         parser.add_argument('-p', '--passList', type=str, help='specify the wordlist for the password')
         parser.add_argument('-d', '--data', type=str,
-                            help='specify the parameters, Ex: username=$U&password=$P&submit=yes')
+                            help='specify the parameters, Ex: username=$U&password=$P&submit=yes&action=/userinfo.php')
         parser.add_argument('-l', '--url', type=str, help='specify the url to the form', required=True)
         parser.add_argument('-t', '--failTxt', type=str, help='provide a text that appears when login fails')
 
@@ -73,16 +73,21 @@ class LoginBrute:
                 print(fg('red') + 'File' + user_list + 'not found')
 
         if not user_list and not username:
-            username = 'test'
+            username = 'alqlambara@gmail.com'
 
         if not pass_list and not password:
-            password = 'test'
+            password = 'bara12340'
 
         if not data:
             pass
-        user_param = 'uname'
-        password_param = 'pass'
+        import scraper1
+        user_param, password_param, submit, action = scraper1.get_source(url)
         method = 'post'
+        i = url.rfind('/')
+        url = url[0:i+1]
+        url = action
+        print((url), user_param, password_param,)
+
 
         return {
             'username': username,
@@ -93,7 +98,8 @@ class LoginBrute:
             'password_param': password_param,
             'method': method,
             'url': url,
-            'fail_text': fail_text
+            'fail_text': fail_text,
+
         }
 
 
