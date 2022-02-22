@@ -88,8 +88,8 @@ class LoginBrute:
                     method = p
 
         else:
-            import scraper1
-            user_param, password_param, submit, action, method = scraper1.get_source(url)
+            import params_scraper
+            user_param, password_param, submit, action, method = params_scraper.get_source(url)
         print(user_param,password_param,submit,method,action)
 
 
