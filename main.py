@@ -1,26 +1,12 @@
 import argparse
 
-from colored import fg, bg, attr, stylize
 
 import attack
 
 
 class LoginBrute:
-    default = fg(246)
-    green = fg(34) + attr('bold')
-    yellow = fg(221)
-    reset = attr('reset')
 
-    error = fg('red') + '[!] ' + default
-    detail = fg(220) + '[*] ' + default
-    fail = fg('red') + '[-] ' + default
-    success = fg('green') + '[+] ' + default
-    event = fg(26) + '[*] ' + default
-    debug = '[+]--- '
-    notification = fg(246) + '[-] ' + default
-
-    creds_found = 0
-    __banner__ = green + '''
+    __banner__ = '''
 #########################################
  __________                __          
 \______   \_______ __ ___/  |_  ____  
@@ -72,15 +58,15 @@ class LoginBrute:
                 print(fg('red') + 'File' + user_list + 'not found')
 
         if not user_list and not username:
-            username = 'hossam_one@hotmail.com'
+            username = 'alqlambara@gmail.com'
 
         if not pass_list and not password:
-            password = 'weponsofshit351'
+            password = 'bara12340'
 
-        if not data:
+        if not data: 
             pass
-        import scraper1
-        user_param, password_param, submit, action, method = scraper1.get_source(url)
+        import params_scraper
+        user_param, password_param, submit, action, method = params_scraper.get_source(url)
         if 'http' not in action:
             i = url.rfind('/')
             url = url[0:i + 1]
