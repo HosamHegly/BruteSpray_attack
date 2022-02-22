@@ -62,11 +62,11 @@ def get_random_user_agent():
         with open(ua_file) as f:
             lines = f.readlines()
         if len(lines) > 0:
-            prng = np.random.RandomState()
-            index = prng.permutation(len(lines) - 1)
+            random = np.random.RandomState()
+            index = random.permutation(len(lines) - 1)
             idx = np.asarray(index, dtype=np.integer)[0]
             random_proxy = lines[int(idx)]
-            return random_proxy[2:len(random_proxy)-2]
+            return random_proxy[2:len(random_proxy)-2] # need to fix this later
     except Exception as ex:
         print('Exception in user agent')
         print(str(ex))

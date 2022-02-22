@@ -4,20 +4,8 @@ import attack
 
 class LoginBrute:
 
-    __banner__ = '''
-#########################################
- __________                __          
-\______   \_______ __ ___/  |_  ____  
- |    |  _/\_  __ \  |  \   __\/ __ \ 
- |    |   \ |  | \/  |  /|  | \  ___/ 
- |______  / |__|  |____/ |__|  \___  >
-        \/                         \/ 
-
-##########################################
-    '''
-
     def __init__(self, ):
-        print(self.__banner__ + "\n")
+        print("#########################################\n\n")
         params = self.get_parameters(self.get_args())
         attack.brute(params)
 
@@ -37,13 +25,11 @@ class LoginBrute:
         return parser.parse_args()
 
     def get_parameters(self, args):
-        username = args.user
-        user_list = args.userList
-        password = args.password
-        pass_list = args.passList
-        data = args.data
-        url = args.url
-        fail_text = args.failTxt
+        
+        username, user_list = args.user, args.userList
+        password, pass_list = args.password, args.passList
+        data, url, fail_text = args.data, args.url, args.failTxt
+        
         if pass_list:
             try:
                 pass_list = open(pass_list, 'rb').readlines()
@@ -68,9 +54,8 @@ class LoginBrute:
                 exit(1)
             try:
                 user_param, password_param, submit, action, method = data.split('@')
-                print(user_param,password_param,submit,method,action)
-                i = user_param.rfind('=')
-                user_param = user_param[i+1:len(user_param)]
+                i = user_param.rfind('=') + 1
+                user_param = user_param[i:len(user_param)]
                 i = password_param.rfind('=') + 1
                 password_param = password_param[i:len(password_param)]
                 i = submit.rfind('=') + 1
@@ -103,7 +88,6 @@ class LoginBrute:
             'method': method,
             'url': url,
             'fail_text': fail_text,
-
         }
 
 
