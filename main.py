@@ -5,7 +5,6 @@ from colored import fg, bg, attr, stylize
 import attack
 
 
-
 class LoginBrute:
     default = fg(246)
     green = fg(34) + attr('bold')
@@ -29,7 +28,7 @@ class LoginBrute:
  |    |   \ |  | \/  |  /|  | \  ___/ 
  |______  / |__|  |____/ |__|  \___  >
         \/                         \/ 
-                                                    
+
 ##########################################
     '''
 
@@ -73,21 +72,21 @@ class LoginBrute:
                 print(fg('red') + 'File' + user_list + 'not found')
 
         if not user_list and not username:
-            username = 'alqlambara@gmail.com'
+            username = 'hossam_one@hotmail.com'
 
         if not pass_list and not password:
-            password = 'bara12340'
+            password = 'weponsofshit351'
 
         if not data:
             pass
         import scraper1
-        user_param, password_param, submit, action = scraper1.get_source(url)
-        method = 'post'
-        i = url.rfind('/')
-        url = url[0:i+1]
-        url = action
-        print((url), user_param, password_param,)
-
+        user_param, password_param, submit, action, method = scraper1.get_source(url)
+        if 'http' not in action:
+            i = url.rfind('/')
+            url = url[0:i + 1]
+            url = url + action
+        else:
+            url = action
 
         return {
             'username': username,
