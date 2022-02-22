@@ -55,7 +55,7 @@ def attack(content):
 
 
 def check_login(request):
-    if 'Dashboard' in request.text:
+    if 'test' in request.text:
         return True
     if request.text.__contains__('token'):
         return True
