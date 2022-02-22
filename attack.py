@@ -74,7 +74,7 @@ def get_random_user_agent():
         return random_proxy[2:len(random_proxy)-2]
 
 def check_login(request):
-    if 'Dashboard' in request.text:
+    if 'test' in request.text:
         return True
     if request.text.__contains__('token'):
         return True
