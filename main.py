@@ -1,5 +1,4 @@
 import argparse
-from argon2 import Parameters
 import attack
 
 class LoginBrute:
