@@ -1,5 +1,4 @@
 import argparse
-from argon2 import Parameters
 import attack
 
 class LoginBrute:
@@ -73,10 +72,14 @@ class LoginBrute:
 
         if 'http' not in action:
             i = url.rfind('/')
-            url = url[0:i + 1]
+            if(action[0] == '/'):
+                url = url[0:i]
+            else:
+                url = url[0:i]
             url = url + action
         else:
             url = action
+        print(user_param, password_param, submit, action, method,url)
 
         return {
             'username': username,
