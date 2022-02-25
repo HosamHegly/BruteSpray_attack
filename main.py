@@ -43,10 +43,10 @@ class LoginBrute:
                 print('File' + user_list + 'not found')
 
         if not user_list and not username:
-            username = 'test'
+            username = 'admin'
 
         if not pass_list and not password:
-            password = 'test'
+            password = 'admin1234'
 
         if data:
             if 'username' not in data or 'password' not in data or 'method' not in data or 'submit' not in data or 'action' not in data:
@@ -71,25 +71,8 @@ class LoginBrute:
             import params_scraper
             user_param, password_param, submit, action, method = params_scraper.get_source(url)
 
-        if 'http' not in action:
-            urll = url
-
-            if action[0] == '.':
-                action = action[1 : len(url)]
-            i = url.find('//')
-            urll = url[i +2 :len(url)]
-            j = urll.find('/')
-            urll = urll[0 : j]
-            if action[0] != '/':
-                url =  'https://'+ urll + '/' +action
 
 
-
-            else :
-                url ='https://'+ urll + action
-
-        else:
-            url = action
         print(user_param, password_param, submit, action, method, url)
 
         return {
@@ -102,6 +85,7 @@ class LoginBrute:
             'method': method,
             'url': url,
             'fail_text': fail_text,
+            'action' : action,
         }
 
 

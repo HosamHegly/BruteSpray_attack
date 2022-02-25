@@ -53,14 +53,15 @@ def _pick_params(form, doc):
             submit = p.get('value')
 
     if(not submit):
-        query = '//form[@id='+form.get("id")+']//button[@type=submit]'
-        submit = doc.xpath(query)
+        '''query = '//form[@id='+form.get("id")+']//button[@type=submit]'
+        submit = doc.xpath(query)'''
+        submit = "aaaaa"
 
     return username, password, submit
 
 
 def get_source(url):
-    r = requests.get(url)
+    r = requests.get(url, verify=False)
     doc = html.document_fromstring(r.text, base_url=url)
     form = _pick_form(doc.xpath('//form'))
 
