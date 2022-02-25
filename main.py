@@ -72,12 +72,22 @@ class LoginBrute:
             user_param, password_param, submit, action, method = params_scraper.get_source(url)
 
         if 'http' not in action:
-            i = url.rfind('/')
-            if (action[0] == '/'):
-                url = url[0:i]
-            else:
-                url = url[0:i]
-            url = url + action
+            urll = url
+
+            if action[0] == '.':
+                action = action[1 : len(url)]
+            i = url.find('//')
+            urll = url[i +2 :len(url)]
+            j = urll.find('/')
+            urll = urll[0 : j]
+            if action[0] != '/':
+                url =  'https://'+ urll + '/' +action
+
+
+
+            else :
+                url ='https://'+ urll + action
+
         else:
             url = action
         print(user_param, password_param, submit, action, method, url)
