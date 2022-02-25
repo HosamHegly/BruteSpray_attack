@@ -1,6 +1,7 @@
 import argparse
 import attack
 
+
 class LoginBrute:
 
     def __init__(self, ):
@@ -24,11 +25,11 @@ class LoginBrute:
         return parser.parse_args()
 
     def get_parameters(self, args):
-        
+
         username, user_list = args.user, args.userList
         password, pass_list = args.password, args.passList
         data, url, fail_text = args.data, args.url, args.failTxt
-        
+
         if pass_list:
             try:
                 pass_list = open(pass_list, 'rb').readlines()
@@ -47,7 +48,7 @@ class LoginBrute:
         if not pass_list and not password:
             password = 'test'
 
-        if  data:
+        if data:
             if 'username' not in data or 'password' not in data or 'method' not in data or 'submit' not in data or 'action' not in data:
                 print(self.error + 'invalid html parameters input\n')
                 exit(1)
@@ -72,14 +73,14 @@ class LoginBrute:
 
         if 'http' not in action:
             i = url.rfind('/')
-            if(action[0] == '/'):
+            if (action[0] == '/'):
                 url = url[0:i]
             else:
                 url = url[0:i]
             url = url + action
         else:
             url = action
-        print(user_param, password_param, submit, action, method,url)
+        print(user_param, password_param, submit, action, method, url)
 
         return {
             'username': username,
