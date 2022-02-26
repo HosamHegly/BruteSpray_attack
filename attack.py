@@ -37,14 +37,10 @@ def brute(parameters):
 
 
 def attack(content):
-    if isinstance(content['username'], bytes):
-        user = content['username'].decode('utf-8')
-    else:
-        user = content['username']
-    if isinstance(content['password'], bytes):
-        pwd = content['password'].decode('utf-8')
-    else:
-        pwd = content['password']
+
+    user = str(content['username'])[2:-1]
+    pwd = str(content['password'])[2:-1]
+    
     br = mechanize.Browser()
     br.set_handle_robots(False)
     try:
@@ -68,19 +64,6 @@ def attack(content):
     br[content['user_param']] = content['username']
     br[content['password_param']] = content['password']
     res = br.submit()
-
-    '''payload = {
-       'username': 'hegleh123',
-        'password':'2X7GB5CZSFGJN',
-    }
-    headers = {
-        'user-agent': get_random_user_agent().encode().decode('utf-8'),
-    }
-    # Doing the post/get form
-    if content['method'] == 'post':
-        request = requests.post(content['url'], data=payload, headers = headers)
-    else:
-        request = requests.get(content['url'], data=payload, headers = headers)'''
     if check_login(res, content['password_param'], content['user_param']):
 
         print('login successfull\n\nusername: ' + user + '\npassword: ' + pwd)
@@ -103,12 +86,12 @@ def get_random_user_agent():
             index = random.permutation(len(lines) - 1)
             idx = np.asarray(index, dtype=np.integer)[0]
             random_proxy = lines[int(idx)]
-            return random_proxy[2:len(random_proxy) - 2]  # need to fix this later
+            return random_proxy[0:len(random_proxy) - 2]  # need to fix this later
     except Exception as ex:
         print('Exception in user agent')
         print(str(ex))
     finally:
-        return random_proxy[2:len(random_proxy) - 2]
+        return random_proxy[0:len(random_proxy) - 2]
 
 
 def check_login(content, password_param, user_param):
