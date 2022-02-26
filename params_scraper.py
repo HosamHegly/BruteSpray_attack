@@ -1,10 +1,9 @@
-import urllib
 from collections import defaultdict
 from lxml import html
 import requests
 
 def _form_score(form):
-    '''rate form by score. form with highest score is the has the highest chance of being the log in form'''
+    '''rate forms by score. form with highest score is the has the highest chance of being the log in form'''
     score = 0
     if 'log' in str(form.get('name')).lower() or 'sign' in str(form.get('name')).lower():
         score += 10
@@ -61,6 +60,9 @@ def _pick_params(form, doc):
 
 
 def get_source(url):
+    '''
+    parse html content of login page
+    '''
     r = requests.get(url, verify=False)
     doc = html.document_fromstring(r.text, base_url=url)
     form = _pick_form(doc.xpath('//form'))

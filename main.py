@@ -1,15 +1,30 @@
 import argparse
 import attack
-
+banner = '''
+  ___ ___                             .__                 
+ /   |   \   ___________   ____  __ __|  |   ____   ______
+/    ~    \_/ __ \_  __ \_/ ___\|  |  \  | _/ __ \ /  ___/
+\    Y    /\  ___/|  | \/\  \___|  |  /  |_\  ___/ \___ \ 
+ \___|_  /  \___  >__|    \___  >____/|____/\___  >____  >
+       \/       \/            \/                \/     \/ 
+'''
 
 class LoginBrute:
 
+            
     def __init__(self, ):
-        print("#########################################\n\n")
+        """_summary_
+        Login Bruteforce\Passwordspray attack script 
+        
+        """
+        print(f"{banner}\n\n")
         params = self.get_parameters(self.get_args())
         attack.brute(params)
 
     def get_args(self):
+        '''
+        parse arguments from command line 
+        '''
         parser = argparse.ArgumentParser()
 
         parser.add_argument('-U', '--user', type=str, help='specify the user name for the login')
@@ -25,7 +40,9 @@ class LoginBrute:
         return parser.parse_args()
 
     def get_parameters(self, args):
-
+        '''
+        stores command line variables and checks which variables were provided
+        '''
         username, user_list = args.user, args.userList
         password, pass_list = args.password, args.passList
         data, url, fail_text = args.data, args.url, args.failTxt
@@ -69,12 +86,9 @@ class LoginBrute:
                 exit(1)
         else:
             import params_scraper
+            # html source page fields (submit, action and method not needed for now)
             user_param, password_param, submit, action, method = params_scraper.get_source(url)
-
-
-
-        print(user_param, password_param, submit, action, method, url)
-
+        # print(user_param, password_param, submit, action, method)
         return {
             'username': username,
             'user_list': user_list,
@@ -89,4 +103,5 @@ class LoginBrute:
         }
 
 
-LoginBrute()
+if __name__ == "__main__":
+    LoginBrute()
