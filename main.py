@@ -32,13 +32,13 @@ class LoginBrute:
 
         if pass_list:
             try:
-                pass_list = open(pass_list, 'rb').readlines()
+                pass_list = open(pass_list, encoding="utf-8").readlines()
             except IOError as e:
                 print('File' + pass_list + ' not found')
 
         if user_list:
             try:
-                user_list = open(user_list, 'rb').readlines()
+                user_list = open(user_list, encoding="utf-8").readlines()
             except IOError as e:
                 print('File' + user_list + 'not found')
 

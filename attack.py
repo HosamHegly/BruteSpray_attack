@@ -24,10 +24,14 @@ def brute(parameters):
     # if userlist is provided then checks if passwordlist is provided or just 1 password
     if parameters['user_list']:
         for user in parameters['user_list']:
-            content['username'] = user
+            user = user.strip()
+            user = user.split('\t')
+            content['username'] = user[0]
             if parameters['password_list']:
                 for password in parameters['password_list']:
-                    content['password'] = password
+                    password = password.strip()
+                    password = password.split('\t')
+                    content['password'] = password[0]
                     attack(content)
             else:
                 content['password'] = parameters['password']
@@ -36,7 +40,9 @@ def brute(parameters):
     elif parameters['password_list']:
         content['username'] = parameters['username']
         for password in parameters['password_list']:
-            content['password'] = password
+            password = password.strip()
+            password = password.split('\t')
+            content['password'] = password[0]
             attack(content)
 
     else:
