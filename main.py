@@ -1,7 +1,7 @@
 import argparse
 from sqlite3 import Time
 import threading
-from time import time
+import time
 import attack
 from Wappalyzer import Wappalyzer, WebPage
 
@@ -30,7 +30,7 @@ class LoginBrute:
                 threading.Thread(target=attack.brute, args=(params, chunks[i]), daemon=True).start()
         while not attack.success:
             pass
-    
+           
     def get_args(self):
         parser = argparse.ArgumentParser()
 
