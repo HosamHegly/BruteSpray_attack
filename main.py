@@ -52,8 +52,9 @@ class LoginBrute:
         url = args['url']
         user_param = args['user_param']
         password_param = args['pass_param']
+        req_body = args['req_body']
         method = args['method']
-        static_elements = args['static_elements']
+        # static_elements = args['static_elements']
         req_header = args['req_header']
         action = args['post_url']
 
@@ -89,9 +90,10 @@ class LoginBrute:
             'method': method,
             'url': url,
             'action': action,
-            'static_elements': static_elements,
             'req_header': req_header,
-            'host': host
+            'host': host,
+            'req_body':req_body,
+            
         }
 
 LoginBrute()

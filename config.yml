@@ -4,7 +4,7 @@ pass_list: pass_list.txt
 user_param: user
 pass_param: password
 method: post
-post_url: http://brokencrystals.com
+post_url: https://brokencrystals.com/api/auth/login
 req_body: user=&password=&op=html
 req_header:
   Host: brokencrystals.com
