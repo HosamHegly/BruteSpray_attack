@@ -121,6 +121,17 @@ def get_random_user_agent():
         return random_proxy[0:len(random_proxy) - 2]
 
 
+def get_req_type(header):
+    type = header['Content-Type']
+    if 'json' in type:
+        return 'JSON'
+
+    elif 'xml' in type:
+        return 'XML'
+
+    else:
+        return 'URL_ENCODED'
+
 def check_login(content_1, content_2):
     '''
     checks if login was successful by checking if status code is 200 or 302 and if the html similarity of the login
