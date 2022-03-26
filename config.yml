@@ -1,0 +1,25 @@
+url: https://brokencrystals.com/userlogin
+user_list:  user_list.txt
+pass_list: pass_list.txt
+user_param: user
+pass_param: password
+method: post
+post_url: http://brokencrystals.com
+req_body: user=&password=&op=html
+req_header:
+  Host: brokencrystals.com
+  User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0
+  Accept: application/json, text/plain, */*
+  Accept-Language: en-GB,en;q=0.5
+  Accept-Encoding: gzip, deflate, br
+  Content-Type: application/x-www-form-urlencoded
+  Content-Length: '60'
+  Origin: https://brokencrystals.com
+  Connection: keep-alive
+  Referer: https://brokencrystals.com/userlogin
+  Cookie: bc-calls-counter=1; bc-calls-counter=1; connect.sid=O2AgeQN_dsNG342jDw-14YQKSfVBNu0V.m3z%2FC2SQH1ABj8QJKNeJKykuLg8nL3rv5zbBe5kTcWw
+  Sec-Fetch-Dest: empty
+  Sec-Fetch-Mode: cors
+  Sec-Fetch-Site: same-origin
+
+

