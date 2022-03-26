@@ -5,7 +5,7 @@ user_param: user
 pass_param: password
 method: post
 post_url: https://brokencrystals.com/api/auth/login
-req_body: user=&password=&op=html
+req_body: {"user":"mohamadassi173@gmail.com","password":"astmamsh123","op":"basic"}
 req_header:
   Host: brokencrystals.com
   User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0

