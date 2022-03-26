@@ -26,6 +26,7 @@ def brute(parameters, passwords):
                'req_body' : parameters['req_body'],
                }
 
+    # return
     req_body_type = get_req_type(content['req_header'])
     
     # if userlist is provided then checks if passwordlist is provided or just 1 password
@@ -39,7 +40,7 @@ def brute(parameters, passwords):
                     password = password.strip()
                     password = password.split('\t')
                     content['password'] = password[0]
-                    content = change_cred(content['req_body'], content['username'], content['password'], req_body_type)
+                    content = change_cred(content['req_body'], content['user_param'], content['pass_param'], content['username'], content['password'], req_body_type)
                     attack(content)
             else:
                 content['password'] = parameters['password']
@@ -60,8 +61,31 @@ def brute(parameters, passwords):
         
 def get_req_type(type):
     pass
+    
 
-def change_cred(req_body, username, password, req_body_type):
+
+def change_cred(req_body, user_param, pass_param, username, password, req_body_type):
+    print('type: ' + type(req_body))
+    if req_body_type == 'JSON':
+        # import ast
+        # return ast.literal_eval(req_body)
+        req_body[user_param] = username
+        req_body[pass_param] = password
+        return req_body
+    
+    elif req_body_type == 'URL_ENCODED':
+        import urllib
+        # convert from encoded to json
+        req_body = urllib.parse.parse_qs(req_body)
+        req_body[user_param] = username
+        req_body[pass_param] = password
+        # convert from json to encoded
+        return urllib.parse.urlencode(req_body)
+
+    elif req_body_type == 'HTML':
+        pass
+    elif req_body_type == 'XML':
+        pass
     pass
 
 def attack(content):
@@ -75,12 +99,6 @@ def attack(content):
     headers = content['headers']
     headers['User-Agent'] = get_random_user_agent()
     payload = content['req_body']
-    
-    import urllib
-    # convert from json to encoded
-    urllib.parse.urlencode(payload)
-    # convert from encoded to json
-    res = urllib.parse.parse_qs(payload)
 
 
     res = requests.get(url)
