@@ -10,6 +10,13 @@ from scipy import rand
 import mechanize
 import ssl
 success = False
+from requests_html import HTMLSession
+session = HTMLSession()
+
+
+res = session.get('https://demo.securityknowledgeframework.org/auth/login')
+
+res.html.render()  # this call executes the js in the page
 
 def brute(parameters, passwords):
     '''
@@ -74,9 +81,11 @@ def attack(content):
     payload = content['req_body']
     print("[+ req_body]: " + str(content['req_body']))
 
-    res = requests.get(url)
+    # res = requests.get(url)
+
     if content['method'] == 'post':
-        resp = requests.post(content['host'], data=payload)
+        resp = session.post(content['host'], data=payload)
+        resp.html.render()
     else:
         resp = requests.get(url,data=payload,headers=headers)
     print('[+][attack] trying' + ' username:' + content['username'] + ' password:' + content['password'])
@@ -113,7 +122,7 @@ def get_random_user_agent():
 
 
 def get_req_type(header, req_body):
-    type = 'json' # header['Content-Type']
+    type = header['Content-Type']
     print("header: " + str(type))
     if 'json' in type:
         return 'JSON', req_body

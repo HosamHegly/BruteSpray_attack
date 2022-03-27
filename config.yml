@@ -1,25 +1,24 @@
-url: https://brokencrystals.com/userlogin
+url: https://demo.owasp-juice.shop/#/login
 user_list:  user_list.txt
 pass_list: pass_list.txt
-user_param: user
+user_param: email
 pass_param: password
 method: post
-post_url: https://brokencrystals.com/api/auth/login
-req_body: {"user":"mohamadassi173@gmail.com","password":"astmamsh123","op":"basic"}
+post_url: https://demo.owasp-juice.shop/rest/user/login
+req_body: {"email":"mohamad@gmail.com","password":"astmamsh123"}
 req_header:
-  Host: brokencrystals.com
+  Host: demo.owasp-juice.shop
   User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0
   Accept: application/json, text/plain, */*
   Accept-Language: en-GB,en;q=0.5
   Accept-Encoding: gzip, deflate, br
-  Content-Type: application/x-www-form-urlencoded
-  Content-Length: '60'
-  Origin: https://brokencrystals.com
+  Content-Type: application/json
+  Content-Length: 54
+  Origin: https://demo.owasp-juice.shop
   Connection: keep-alive
-  Referer: https://brokencrystals.com/userlogin
-  Cookie: bc-calls-counter=1; bc-calls-counter=1; connect.sid=O2AgeQN_dsNG342jDw-14YQKSfVBNu0V.m3z%2FC2SQH1ABj8QJKNeJKykuLg8nL3rv5zbBe5kTcWw
+  Referer: https://demo.owasp-juice.shop/
+  Cookie: language=en; cookieconsent_status=dismiss
   Sec-Fetch-Dest: empty
   Sec-Fetch-Mode: cors
   Sec-Fetch-Site: same-origin
-
-
+  TE: trailers
