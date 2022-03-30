@@ -26,16 +26,16 @@ class LoginBrute:
         params = self.get_parameters(self.get_args())
         pass_list_len = len(params['password_list'])
         passwords = params['password_list']
-
-        if pass_list_len < 5:
-            for i in range(len(params['password_list'])):
-                threading.Thread(target=attack.brute, args=(params, (passwords[i].strip(), )), daemon=True).start()
-        else:
-            chunks = [params['password_list'][i:i+int(pass_list_len/5)] for i in range(0, pass_list_len, int(pass_list_len/5))]
-            for i in range(5):
-                threading.Thread(target=attack.brute, args=(params, chunks[i]), daemon=True).start()
-        while not attack.success:
-            pass
+        attack.brute(params, passwords)
+        # if pass_list_len < 5:
+        #     for i in range(len(params['password_list'])):
+        #         threading.Thread(target=attack.brute, args=(params, (passwords[i].strip(), )), daemon=True).start()
+        # else:
+        #     chunks = [params['password_list'][i:i+int(pass_list_len/5)] for i in range(0, pass_list_len, int(pass_list_len/5))]
+        #     for i in range(5):
+        #         threading.Thread(target=attack.brute, args=(params, chunks[i]), daemon=True).start()
+        # while not attack.success:
+        #     pass
     
     def get_args(self):
         import yaml
