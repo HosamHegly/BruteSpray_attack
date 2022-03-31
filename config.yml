@@ -1,12 +1,11 @@
 url: https://demo.owasp-juice.shop/#/login
-user_list:  user_list.txt
-pass_list: pass_list.txt
+pass_user:  pass_user.csv
 user_param: email
-pass_param: password
+password_param: password
 method: post
-post_url: https://demo.owasp-juice.shop/rest/user/login
+host: https://demo.owasp-juice.shop/rest/user/login
 req_body: {"email":"mohamad@gmail.com","password":"astmamsh123"}
-req_header:
+headers:
   Host: demo.owasp-juice.shop
   User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0
   Accept: application/json, text/plain, */*
