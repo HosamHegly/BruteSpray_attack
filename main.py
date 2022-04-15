@@ -23,7 +23,6 @@ class LoginBrute:
             print('File ' + args['pass_user'] + ' not found')
         
         print(str(pass_user))
-        
         args['user_list'] = pass_user['Usernames']
         args['passwords'] = pass_user['Passwords']
 
