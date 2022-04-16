@@ -4,11 +4,14 @@ user_param: user
 password_param: password
 method: post
 host: https://brokencrystals.com/api/auth/login
-req_body: 
-  csrf: 9VWzF3gy6aW+sOFg2E1ohBIXlVj6/Vpq
-  op: csrf
-  password: asdasdsaas
-  user: asdas
+req_body:
+  <note>
+  <to>Tove</to>
+  <from>Jani</from>
+  <heading>Reminder</heading>
+  <body>Don't forget me this weekend!</body>
+  </note>
+dynamic_
 headers:
   Host: demo.owasp-juice.shop
   User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0
