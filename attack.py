@@ -45,7 +45,7 @@ def attack(content):
     payload= change_cred(content['req_body'], content['user_param'], content['password_param'],
                                       content['username'], content['password'], content['req_body_type'], soup, content['tokens'])
 
-    payload = 'log=alqlambara%40gmail.com&pwd=astmamsh123'
+    # payload = 'log=alqlambara%40gmail.com&pwd=astmamsh123'
     print("[+ payload]: " + str(payload))
 
     if content['method'] == 'post':
