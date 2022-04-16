@@ -1,27 +1,33 @@
-url: https://brokencrystals.com/userlogin
+url: https://defendtheweb.net/auth
 pass_user:  pass_user.csv
-user_param: user
+user_param: username
 password_param: password
 method: post
-host: https://brokencrystals.com/api/auth/login
-req_body: 
-  csrf: 9VWzF3gy6aW+sOFg2E1ohBIXlVj6/Vpq
-  op: csrf
-  password: asdasdsaas
-  user: asdas
+host: https://defendtheweb.net/auth
+
+req_body:
+  username: user_param
+  password: password_param
+
+tokens: ['token']
 headers:
-  Host: demo.owasp-juice.shop
-  User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0
-  Accept: application/json, text/plain, */*
-  Accept-Language: en-GB,en;q=0.5
+  Host: alqlambara.com
+  User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0
+  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+  Accept-Language: en-US,en;q=0.5
   Accept-Encoding: gzip, deflate, br
+  Referer: https://alqlambara.com/qemam/wp-login.php
   Content-Type: application/x-www-form-urlencoded
-  Content-Length: 54
-  Origin: https://demo.owasp-juice.shop
+  Content-Length: 148
+  Origin: https://alqlambara.com
+  Alt-Used: alqlambara.com
   Connection: keep-alive
-  Referer: https://demo.owasp-juice.shop/
-  Cookie: language=en; cookieconsent_status=dismiss
-  Sec-Fetch-Dest: empty
-  Sec-Fetch-Mode: cors
+  Cookie: wordpress_test_cookie=WP%20Cookie%20check; wordpress_test_cookie=WP%20Cookie%20check; wordpress_logged_in_ae1cbf5434f09cf836f6c994d72c987a=alqlambara%40gmail.com%7C1650234713%7CXThaX1PU3QsNAKZSbLmMXu81dfezSOnSPTVJN8nUtPG%7C17a39a6b741a45a83548172013843e39fac32ecbd73937756a6977a0f5cc9e0c; wp-settings-1=libraryContent%3Dbrowse%26editor%3Dtinymce%26hidetb%3D1%26posts_list_mode%3Dlist%26mfold%3Do; wp-settings-time-1=1650061914
+  Upgrade-Insecure-Requests: 1
+  Sec-Fetch-Dest: document
+  Sec-Fetch-Mode: navigate
   Sec-Fetch-Site: same-origin
+  Sec-Fetch-User: ?1
+  Pragma: no-cache
+  Cache-Control: no-cache
   TE: trailers
