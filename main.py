@@ -25,7 +25,8 @@ class LoginBrute:
         print(str(pass_user))
         args['user_list'] = pass_user['Usernames']
         args['passwords'] = pass_user['Passwords']
-
+        print(str(type(args['req_body'])))
+        return
         args['url'] = url
         pass_list_len = len(args['passwords'])
         passwords = args['passwords']

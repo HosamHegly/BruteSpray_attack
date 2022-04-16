@@ -34,6 +34,7 @@ def attack(content):
     # build packet headers in order to disguise as a browser
     headers = content['headers']
     headers['User-Agent'] = get_random_user_agent()
+    
     session = HTMLSession()
     res = session.get(content['host'])
     res.html.render(sleep=1, keep_page=True)
