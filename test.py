@@ -5,11 +5,22 @@ from requests_html import HTMLSession
 import requests
 from xml.etree import ElementTree as et
 
-request = requests.get('https://defendtheweb.net/auth')
-ht = html.document_fromstring(request.text)
+request = requests.get('https://brokencrystals.com/api/auth/simple-csrf-flow')
 
-from bs4 import BeautifulSoup
-soup = BeautifulSoup(request.text, "html.parser")
+cookies = {}
+req_body = {'csrf':'lol','op':'csrf','user':'mohamadassi173@gmail.com','password':'astmamsh123'}
+for cookie in request.cookies:
+    cookies[cookie.name] = cookie.value
 
-inputs=soup.find("input", {"name": "token"})
-print(inputs['value'])
+for item in cookies.keys():
+    if item[1:] in req_body:
+        req_body[item[1:]]= cookies[item]
+    if item in req_body:
+        req_body[item]= cookies[item]
+
+print('cookies: ' + str(cookies) + '\n\n\n\n')
+print('req_body: ' + str(req_body))
+
+request = requests.post('https://brokencrystals.com/api/auth/login',data=req_body,cookies=cookies)
+print('\n\n\n\n')
+print(request.status_code)

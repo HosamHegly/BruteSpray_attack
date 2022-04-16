@@ -3,12 +3,15 @@ pass_user:  pass_user.csv
 user_param: username
 password_param: password
 method: post
-host: https://defendtheweb.net/auth
+action: https://defendtheweb.net/auth
 req_body:
-  username: user_param
-  password: password_param
+  username: username
+  password: password
+
+auth_type:
   
 tokens: ['token']
+set_cookie: 0
 headers:
   Host: alqlambara.com
   User-Agent: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0
