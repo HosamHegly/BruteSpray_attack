@@ -7,9 +7,7 @@ action: https://defendtheweb.net/auth
 req_body:
   username: username
   password: password
-
 auth_type:
-  
 tokens: ['token']
 set_cookie: 0
 headers:

