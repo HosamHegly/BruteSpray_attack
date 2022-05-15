@@ -1,0 +1,10 @@
+{
+
+    "password_param": [
+        "password"
+    ],
+
+    "user_param": [
+        "username", "email", "log", "id"
+    ]
+}

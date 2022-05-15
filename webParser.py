@@ -4,19 +4,6 @@ from collections import defaultdict
 from lxml import html
 import requests
 from requests_html import HTMLSession
-def _form_score(form, req_body):
-    '''rate form by score. form with highest score is the has the highest chance of being the log in form'''
-    for input in form.inputs:
-        inputName = input.get('name')
-        for param in req_body:
-            if inputName == param:
-                if input.type == 'text' or input.type == 'email':
-                    username = inputName
-                elif input.type == 'password':
-                    password = inputName
-    
-    return username, password if username and password else None
-
 
 def _pick_params(forms, req_body):
     '''rate form by score. form with highest score is the has the highest chance of being the log in form'''
@@ -37,26 +24,39 @@ def _pick_params(forms, req_body):
                         return username, password  
     return None
 
-def _pick_params_regex(req_body):
-    pass
+def jaccard_similarity(a, b):
+    # convert to set
+    a = set(a)
+    b = set(b)
+    # calucate jaccard similarity
+    j = float(len(a.intersection(b))) / len(a.union(b))
+    return j
 
-def get_source(url, req_body, type):
+def similarity_value(param, usernames):
+    return max(usernames, key=lambda uname: jaccard_similarity(param.lower(), uname)) 
+
+def _pick_params_regex(req_body, passwords, usernames):
+    uname = max(req_body, key=lambda x: similarity_value(x, usernames)) 
+    
+    req_body.pop(uname)
+    pname = max(req_body, key=lambda x: similarity_value(x, passwords)) 
+    
+    return uname, pname
+
+def get_source(url, req_body,passwords_params_list, usernames_params_list, type):
     if type == 'javascript':
         session = HTMLSession()
         r = session.get(url)
         r.html.render()
         body = r.html.html
-        print('\n\n\n\n\n\n\n\n' + str(body) + '\n\n\n\n\n\n')
     else:
         r = requests.get(url)
         body = r.text
-    print('get req')
     doc = html.document_fromstring(body, base_url=url)
-    print(' html.document_fromstring(r.text, base_url=url)')
-    print('\n\n\n\n\n\n ' + str(len(doc.xpath('//form'))))
     params = _pick_params(doc.xpath('//form'), req_body)
-    print("_pick_params(doc.xpath('//form'), req_body)")
+    params = None
     if params:
         username , password = params
-    else: username, password = _pick_params_regex(req_body)
+    else: username, password = _pick_params_regex(req_body, passwords_params_list, usernames_params_list)
+    print(username, password)
     return username, password 

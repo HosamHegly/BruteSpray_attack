@@ -1,9 +1,9 @@
-url: https://brokencrystals.com/userlogin
+url: https://alqlambara.com/
+pass_user: pass_user.csv
+params_list: params.json
 req_body:
-  csrf: "MWwcSalAUlvXeL2TRmEO0TM3DOvyhaWb"
-  op: "csrf"
-  password: "astmamsh123jgjh"
-  user: "mohamadassi173@gmail.com"
+  pwd: "astmamsh123jgjh"
+  log: "mohamadassi173@gmail.com"
 headers:
   Host: defendtheweb.net
   User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0
