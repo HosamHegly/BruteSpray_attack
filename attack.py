@@ -1,17 +1,20 @@
 import logging
 import sys
+import webParser
 import requests
 from bs4 import BeautifulSoup
 import ssl
 from html_similarity import style_similarity, structural_similarity, similarity
 from requests_html import HTMLSession
-
+from lxml import html
 
 def brute(parameters):
     """
     sends all combinations for usernames and passwords to the attack function on the login page
     """
-
+    parameters['statusCode'] = 'wrong'
+    parameters['statusCode'] = get_status_code(parameters)
+    
     for username in parameters["Usernames"]:
         parameters["username"] = username.strip()
         for password in parameters["Passwords"]:
@@ -43,16 +46,31 @@ def attack(content):
     for token in payload:
         if token != content["user_param"] and token != content["password_param"]:
             inputs = soup.find("input", {"name": token})
-            payload[token] = inputs["value"]
+            if inputs:
+                payload[token] = inputs["value"]
+                logging.debug(str(payload[token]) + ' value has changed to ' + str(inputs["value"]))
 
     payload, cookies = change_cookiesToken(cookies, payload)
 
-    logging.debug("[+ payload]: " + str(payload))
+    logging.info("[+ payload]: " + str(payload))
+    
+    resp = post(content, payload, cookies)
 
-    # if content["method"] == "post":
+    if check_login(resp, content, payload):
+        logging.info(
+            "login successfull\n\nusername: "
+            + content["username"]
+            + "\npassword: "
+            + content["password"]
+        )
 
+        sys.exit(1)
+    return resp.status_code
+
+def post(content, payload, cookies):
+    
     if content["req_body_type"] == "XML":
-        pass
+            pass
 
     elif content["req_body_type"] == "JSON":
         resp = requests.post(content["url"], json=payload, cookies=cookies)
@@ -64,44 +82,30 @@ def attack(content):
 
     else:
         resp = requests.post(content["url"], data=payload, cookies=cookies)
+        
+    return resp
 
-    # else:
-    #     resp = requests.get(content["action"] + "/" + payload, headers=headers)
-
-    print(resp.status_code)
-
-    if check_login(resp, res):
-        logging.info(
-            "login successfull\n\nusername: "
-            + content["username"]
-            + "\npassword: "
-            + content["password"]
-        )
-
-        sys.exit(1)
-
-
-def check_login(content_1, content_2):
+def check_login(response, args, payload):
     """
     checks if login was successful by checking if status code is 200 or 302 and if the html similarity of the login
     page and the page after sending the credintials is bellow 70% + the response content is lager the the login page content
     """
-    k = 0.3
-    similarity = k * structural_similarity(content_1.text, content_2.text) + (
-        1 - k
-    ) * style_similarity(content_1.text, content_2.text)
-
-    if content_1.status_code >= 400:
+    if args['statusCode'] == 'wrong':
+        return False
+    
+    if response.status_code >= 400:
         return False
 
-    elif content_1.status_code == 201:
+    elif response.status_code != args['statusCode']:
         return True
-
-    elif similarity < 0.7:
-        return True
-
+    
     else:
-        return False
+        if args['type'] != 'javascript':
+            doc = html.document_fromstring(response.text)
+            form = webParser.pickForm(doc.xpath('//form'), payload)
+            if form == None:
+                return True
+        else: return False
 
 
 ########################################################################################
@@ -121,3 +125,9 @@ def change_cookiesToken(cookies_jar, req_body):
         cookies = None
 
     return req_body, cookies
+
+def  get_status_code(parameters):
+    parameters["username"] = 'hosam'
+    parameters["password"] = 'password'
+    statusCode = attack(parameters)
+    return statusCode

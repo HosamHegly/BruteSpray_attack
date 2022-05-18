@@ -1,0 +1,42 @@
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:56944/devtools/browser/51763312-fdd4-44de-aa91-8252b4460dac
+INFO:root:[webParser] Fetched user and password params from html
+INFO:root:{
+  "action": "https://brokencrystals.com/api/auth/login",
+  "pass_user": "pass_user.csv",
+  "params_list": "params.json",
+  "req_body": {
+    "op": "basic",
+    "password": "astmamshas123",
+    "user": "mohamadassi173@gmailasd.com"
+  },
+  "headers": {
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "en-US,en;q=0.9,ar;q=0.8,he;q=0.7",
+    "Connection": "keep-alive",
+    "Content-Type": "application/json",
+    "Host": "brokencrystals.com",
+    "Origin": "https://brokencrystals.com",
+    "Referer": "https://brokencrystals.com/userlogin",
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-origin",
+    "User-Agent": "Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36 Edg/101.0.4951.64"
+  },
+  "url": "https://brokencrystals.com/userlogin",
+  "type": "javascript",
+  "user_param": "user",
+  "password_param": "password",
+  "req_body_type": "JSON",
+  "Usernames": "0        alqlambara@gmail.com\n1                     mohamad\n2                       loool\n3    mohamadassi173@gmail.com\nName: Usernames, dtype: object",
+  "Passwords": "0         asdasd\n1    astmamsh123\n2      bara12340\n3         asdasd\nName: Passwords, dtype: object"
+}
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:56961/devtools/browser/09ec5dda-b066-48c2-a970-bf57d8451792
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:56977/devtools/browser/0021a9ec-3fbb-4f11-8c50-45353d0ac1d5
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:56992/devtools/browser/5e25681f-9ae5-4114-89e7-e5dcfe94bd2d
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:57012/devtools/browser/07ae9b60-6960-403a-87d9-efbb82777b34
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...

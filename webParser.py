@@ -60,6 +60,7 @@ def get_source(args, params_list):
     else:
         r = requests.get(args["url"])
         body = r.text
+        
     doc = html.document_fromstring(body, base_url=args["url"])
     form = pickForm(doc.xpath('//form'), args["req_body"])
 
@@ -70,35 +71,14 @@ def get_source(args, params_list):
     else: 
         logging.info('[webParser] Fetched user and password params from json list')
         args["user_param"], args["password_param"] = _pick_params_regex(args["req_body"], params_list["password_param"], params_list["user_param"])
-
-    args["action"] = getAction(form, args["url"])
     
     args["req_body_type"] = get_req_type(args["headers"])
-    
+
     return args
-
-
-def getAction(form, url):
-    action = form.get('action')
-    if 'http' not in action:
-        file = url.split('/')[:-1]
-        if '.' in file:
-            url = url[:len(file)+1]
-        if action[0] == '/':
-            url = url + action[1:len(action)]
-        else:
-            ind = url.rfind('/')
-            url = url[0 : ind+1]
-            url = url+ action
-    else:
-        url = action
-    return url
-    
-    
     
     
 def get_req_type(header):
-    type = header["Content-Type"]
+    type = header["content-type"]
 
     if "json" in type:
         return "JSON"

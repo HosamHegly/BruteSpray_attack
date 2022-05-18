@@ -32,16 +32,17 @@ class LoginBrute:
             logging.error(e)
             sys.exit()
             
-        url = args['headers']['Referer']
+        args['headers'] = {k.lower(): v for k, v in args['headers'].items()}
+        url = args['headers']['referer']
         args["url"] = WebInfo.get_admin_page(url)
-        args["type"] = "javascript"  #
+        args["type"] = "javascriapt"  #
 
         # remove content length and cookies from headers
-        if 'Cookie' in args['headers']:
-            args['headers'].pop('Cookie')
+        if 'cookie' in args['headers']:
+            args['headers'].pop('cookie')
             
-        if 'Content-Length' in args['headers']:
-            args['headers'].pop('Content-Length')
+        if 'content-Length' in args['headers']:
+            args['headers'].pop('content-Length')
         
         args = webParser.get_source(args, params_list)
 

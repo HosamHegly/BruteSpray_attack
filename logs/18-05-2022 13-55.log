@@ -1,0 +1,66 @@
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55636/devtools/browser/3432b5c0-750c-46f0-8fa3-f6f812832e1c
+INFO:root:[webParser] Fetched user and password params from html
+INFO:root:{
+  "action": "https://brokencrystals.com/api/auth/login",
+  "pass_user": "pass_user.csv",
+  "params_list": "params.json",
+  "req_body": {
+    "op": "basic",
+    "password": "astmamshas123",
+    "user": "mohamadassi173@gmailasd.com"
+  },
+  "headers": {
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "en-US,en;q=0.9,ar;q=0.8,he;q=0.7",
+    "Connection": "keep-alive",
+    "Content-Type": "application/json",
+    "Host": "brokencrystals.com",
+    "Origin": "https://brokencrystals.com",
+    "Referer": "https://brokencrystals.com/userlogin",
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-origin",
+    "User-Agent": "Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36 Edg/101.0.4951.64"
+  },
+  "url": "https://brokencrystals.com/userlogin",
+  "type": "javascript",
+  "user_param": "user",
+  "password_param": "password",
+  "req_body_type": "JSON",
+  "Usernames": "0        alqlambara@gmail.com\n1                     mohamad\n2                       loool\n3    mohamadassi173@gmail.com\nName: Usernames, dtype: object",
+  "Passwords": "0         asdasd\n1    astmamsh123\n2      bara12340\n3         asdasd\nName: Passwords, dtype: object"
+}
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55653/devtools/browser/39bd8aef-b43e-418a-bad6-0dfcd258b940
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55672/devtools/browser/01334b31-0a4b-4fe3-aa1a-902c78f3e259
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55692/devtools/browser/97a730e6-5eac-4839-9f6b-a5cac9b6695e
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55716/devtools/browser/c8427435-1e11-4782-a93b-fa996f48c047
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55734/devtools/browser/bea912e7-2d05-4253-9d10-c4ee58de614b
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55754/devtools/browser/62dc0d32-6565-4f8f-b89c-d7e6995db244
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55773/devtools/browser/075a53ec-2b9c-4c97-9948-4c613b99f2de
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55792/devtools/browser/cf742296-3a35-4214-81e2-ab52642ed58c
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55810/devtools/browser/7491b075-fc2f-4a00-af80-61aa67cdfc13
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55831/devtools/browser/69807272-1dc5-4e82-bd14-b8d24f2c1c5d
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55848/devtools/browser/8ecc1e1e-6f42-4a62-a2cb-b95055ebdf36
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55868/devtools/browser/94aab003-b976-4480-8dc3-e9b95d928c77
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55889/devtools/browser/cf675a62-951c-4c7a-84ae-66150cf35d06
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55909/devtools/browser/979381a6-1287-4038-8bb2-bafa86bf478a
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55929/devtools/browser/aa84f81d-207f-479e-8441-f18582e6ba5f
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55947/devtools/browser/7e8238af-39ed-4b1d-91ee-9c4a8b4c0580
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...

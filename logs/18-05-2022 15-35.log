@@ -1,0 +1,49 @@
+INFO:root:[webParser] Fetched user and password params from html
+INFO:root:{
+  "action": "https://defendtheweb.net/auth",
+  "pass_user": "pass_user.csv",
+  "params_list": "params.json",
+  "req_body": {
+    "token": "a511d833132fa2626d32a5e0fc977bc885f73732b6f840e0f41bc260d5ce1d80",
+    "username": "m7mdassia",
+    "password": "astmamsh123"
+  },
+  "headers": {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+    "accept-encoding": "gzip, deflate, br",
+    "accept-language": "en-US,en;q=0.9,ar;q=0.8,he;q=0.7",
+    "cache-control": "max-age=0",
+    "content-length": 110,
+    "content-type": "application/x-www-form-urlencoded",
+    "origin": "https://defendtheweb.net",
+    "referer": "https://defendtheweb.net/auth",
+    "sec-fetch-dest": "document",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-user": "?1",
+    "upgrade-insecure-requests": 1,
+    "user-agent": "Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36 Edg/101.0.4951.64"
+  },
+  "url": "https://defendtheweb.net/auth",
+  "type": "javascriapt",
+  "user_param": "username",
+  "password_param": "password",
+  "req_body_type": "URL_ENCODED",
+  "Usernames": "0        alqlambara@gmail.com\n1                     mohamad\n2                    m7mdassi\n3    mohamadassi173@gmail.com\nName: Usernames, dtype: object",
+  "Passwords": "0         asdasd\n1    astmamsh123\n2      bara12340\n3         asdasd\nName: Passwords, dtype: object"
+}
+INFO:root:[+ payload]: {'token': '13da98debd485274daf74c8e3c2a2891368ab63ac97fa066bf493e6c7e63875a', 'username': 'hosam', 'password': 'password'}
+INFO:root:[+ payload]: {'token': 'bbc5371753f8bfd4104943774e1420ab35cde7acbb174892041eb1d928bc0f35', 'username': 'alqlambara@gmail.com', 'password': 'asdasd'}
+INFO:root:[+ payload]: {'token': '542a664c693631b9f95a82febd891f5dbdf1852c08e589e6fa54edd70fd7437f', 'username': 'alqlambara@gmail.com', 'password': 'astmamsh123'}
+INFO:root:[+ payload]: {'token': '8335477a050617078e421706347dbbd0407aeae38ba55ea1632d94aff75bc66f', 'username': 'alqlambara@gmail.com', 'password': 'bara12340'}
+INFO:root:[+ payload]: {'token': '70ae5ec655c27b6f478f7fc2b301d1c021aec6024ff28109ce83e49bcd40d70c', 'username': 'alqlambara@gmail.com', 'password': 'asdasd'}
+INFO:root:[+ payload]: {'token': 'a23574ece653cd25c8bf6cbd1cad8d522a27103dbb8e01f6058a456a359e922f', 'username': 'mohamad', 'password': 'asdasd'}
+INFO:root:[+ payload]: {'token': 'c95c40a337a67094d8a08f2c6b77bc32ecd56258336e1bd39a12899b609ee9ee', 'username': 'mohamad', 'password': 'astmamsh123'}
+INFO:root:[+ payload]: {'token': 'f39e37f28c7c667e8298890f9f7ded050e9f9ee4dd2673a17c1f2be53dcba925', 'username': 'mohamad', 'password': 'bara12340'}
+INFO:root:[+ payload]: {'token': '80a6b6ffb254d2574c3914b28296d8d69cefa7d8632cb4f6f107c2d2b79e87db', 'username': 'mohamad', 'password': 'asdasd'}
+INFO:root:[+ payload]: {'token': '9017350ac65ef04983ebf62a5ff6492f41a0167f4eacbc4c873553ba95ab80d0', 'username': 'm7mdassi', 'password': 'asdasd'}
+INFO:root:[+ payload]: {'token': '503c165bfe8398a716050120d1b044530269e08272053679d172cdc04832c382', 'username': 'm7mdassi', 'password': 'astmamsh123'}
+INFO:root:login successfull
+
+username: m7mdassi
+password: astmamsh123

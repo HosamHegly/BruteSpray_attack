@@ -1,0 +1,41 @@
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55531/devtools/browser/08c1a4d8-8b90-4c13-9cd7-c718edf183f6
+INFO:root:[webParser] Fetched user and password params from html
+INFO:root:{
+  "action": "https://brokencrystals.com/api/auth/login",
+  "pass_user": "pass_user.csv",
+  "params_list": "params.json",
+  "req_body": {
+    "op": "basic",
+    "password": "astmamshas123",
+    "user": "mohamadassi173@gmailasd.com"
+  },
+  "headers": {
+    "Host": "defendtheweb.net",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:100.0) Gecko/20100101 Firefox/100.0",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Language": "en-GB,en;q=0.5",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Referer": "https://brokencrystals.com/userlogin",
+    "Content-Type": "application/multipart",
+    "Origin": "https://defendtheweb.net",
+    "Connection": "keep-alive",
+    "Upgrade-Insecure-Requests": 1,
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "same-origin",
+    "Sec-Fetch-User": "?1",
+    "TE": "trailers"
+  },
+  "url": "https://brokencrystals.com/userlogin",
+  "type": "javascript",
+  "user_param": "user",
+  "password_param": "password",
+  "req_body_type": "multipart",
+  "Usernames": "0        alqlambara@gmail.com\n1                     mohamad\n2                       loool\n3    mohamadassi173@gmail.com\nName: Usernames, dtype: object",
+  "Passwords": "0         asdasd\n1    astmamsh123\n2      bara12340\n3         asdasd\nName: Passwords, dtype: object"
+}
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55548/devtools/browser/c22caabe-c735-44c4-ad34-b2f582f1809a
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55568/devtools/browser/2239786a-d504-41a8-8502-2b0a2e2c0a7b
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...

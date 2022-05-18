@@ -1,0 +1,38 @@
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:58054/devtools/browser/74a0355a-294e-4b6e-9306-82a74c0fd87a
+INFO:root:[webParser] Fetched user and password params from html
+INFO:root:{
+  "action": "https://defendtheweb.net/auth",
+  "pass_user": "pass_user.csv",
+  "params_list": "params.json",
+  "req_body": {
+    "token": "a511d833132fa2626d32a5e0fc977bc885f73732b6f840e0f41bc260d5ce1d80",
+    "username": "m7mdassia",
+    "password": "astmamsh123"
+  },
+  "headers": {
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+    "accept-encoding": "gzip, deflate, br",
+    "accept-language": "en-US,en;q=0.9,ar;q=0.8,he;q=0.7",
+    "cache-control": "max-age=0",
+    "content-length": 110,
+    "content-type": "application/x-www-form-urlencoded",
+    "origin": "https://defendtheweb.net",
+    "referer": "https://defendtheweb.net/auth",
+    "sec-fetch-dest": "document",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-user": "?1",
+    "upgrade-insecure-requests": 1,
+    "user-agent": "Mozilla/5.0 (Linux; Android 8.0.0; SM-G955U Build/R16NW) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36 Edg/101.0.4951.64"
+  },
+  "url": "https://defendtheweb.net/auth",
+  "type": "javascript",
+  "user_param": "username",
+  "password_param": "password",
+  "req_body_type": "URL_ENCODED",
+  "Usernames": "0        alqlambara@gmail.com\n1                     mohamad\n2                       loool\n3    mohamadassi173@gmail.com\nName: Usernames, dtype: object",
+  "Passwords": "0         asdasd\n1    astmamsh123\n2      bara12340\n3         asdasd\nName: Passwords, dtype: object"
+}
+INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:58067/devtools/browser/ae14c12f-27c5-47d0-8931-918136f182c0
+INFO:pyppeteer.launcher:terminate chrome process...
+INFO:pyppeteer.launcher:terminate chrome process...
