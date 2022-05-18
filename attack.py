@@ -68,27 +68,26 @@ def attack(content):
     return resp.status_code
 
 def post(content, payload, cookies):
-    
+    header = content['headers']
     if content["req_body_type"] == "XML":
             pass
 
     elif content["req_body_type"] == "JSON":
-        resp = requests.post(content["url"], json=payload, cookies=cookies)
+        resp = requests.post(content["url"], json=payload, cookies=cookies, headers=header)
 
     elif content["req_body_type"] == "multipart":
         for param in payload:
             payload[param] = (None, payload[param])
-        resp = requests.post(content["url"], files=payload, cookies=cookies)
+        resp = requests.post(content["url"], files=payload, cookies=cookies, headers=header)
 
     else:
-        resp = requests.post(content["url"], data=payload, cookies=cookies)
+        resp = requests.post(content["url"], data=payload, cookies=cookies, headers=header)
         
     return resp
 
 def check_login(response, args, payload):
     """
-    checks if login was successful by checking if status code is 200 or 302 and if the html similarity of the login
-    page and the page after sending the credintials is bellow 70% + the response content is lager the the login page content
+    checks if login was successful by checking if status code changed and checks if form is still in the page
     """
     if args['statusCode'] == 'wrong':
         return False
@@ -105,7 +104,7 @@ def check_login(response, args, payload):
             form = webParser.pickForm(doc.xpath('//form'), payload)
             if form == None:
                 return True
-        else: return False
+    return False
 
 
 ########################################################################################
@@ -127,7 +126,7 @@ def change_cookiesToken(cookies_jar, req_body):
     return req_body, cookies
 
 def  get_status_code(parameters):
-    parameters["username"] = 'hosam'
+    parameters["username"] = 'hosam' # change to random!
     parameters["password"] = 'password'
     statusCode = attack(parameters)
     return statusCode

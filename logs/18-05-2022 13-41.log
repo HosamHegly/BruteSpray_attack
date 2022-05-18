@@ -1,3 +1,0 @@
-INFO:pyppeteer.launcher:Browser listening on: ws://127.0.0.1:55046/devtools/browser/193af762-9b86-4b18-bf41-5aaf0928610f
-INFO:root:[webParser] Fetched user and password params from html
-INFO:pyppeteer.launcher:terminate chrome process...

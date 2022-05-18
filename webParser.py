@@ -6,6 +6,7 @@ from lxml import html
 import requests
 from requests_html import HTMLSession
 
+#picks the login form in page
 def pickForm(forms, req_body):
     input_list = []
     for form in forms:
@@ -15,8 +16,8 @@ def pickForm(forms, req_body):
         if set(keys).issubset(input_list):
             return form
 
+#identify the user and password params in the body
 def _pick_params(form, req_body):
-    '''rate form by score. form with highest score is the has the highest chance of being the log in form'''
     username = None
     password = None
     for input in form.inputs:
@@ -24,7 +25,7 @@ def _pick_params(form, req_body):
             inputName = input.get('name')
             for param in req_body:
                 if inputName == param:
-                    if input.type == 'text' or input.type == 'email':
+                    if input.type == 'email':
                         username = inputName
                     elif input.type == 'password':
                         password = inputName
@@ -40,18 +41,25 @@ def jaccard_similarity(a, b):
     j = float(len(a.intersection(b))) / len(a.union(b))
     return j
 
+
 def similarity_value(param, usernames):
     return max(usernames, key=lambda uname: jaccard_similarity(param.lower(), uname)) 
 
+
 def _pick_params_regex(req_body, passwords, usernames):
+    #param with max potetntial for being the username
     uname = max(req_body, key=lambda x: similarity_value(x, usernames)) 
     
     req_body.pop(uname)
+    #param with max potetntial for being the password
     pname = max(req_body, key=lambda x: similarity_value(x, passwords)) 
     
     return uname, pname
 
 def get_source(args, params_list):
+    """
+    find the username and password params in the body
+    """
     if args['type'] == 'javascript':
         session = HTMLSession()
         r = session.get(args["url"])
@@ -76,7 +84,7 @@ def get_source(args, params_list):
 
     return args
     
-    
+    # get content type from headers
 def get_req_type(header):
     type = header["content-type"]
 

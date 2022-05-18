@@ -33,6 +33,9 @@ class LoginBrute:
             sys.exit()
             
         args['headers'] = {k.lower(): v for k, v in args['headers'].items()}
+        for param in args['headers']:
+            args['headers'][param] = str(args['headers'][param])
+            
         url = args['headers']['referer']
         args["url"] = WebInfo.get_admin_page(url)
         args["type"] = "javascriapt"  #
@@ -41,8 +44,8 @@ class LoginBrute:
         if 'cookie' in args['headers']:
             args['headers'].pop('cookie')
             
-        if 'content-Length' in args['headers']:
-            args['headers'].pop('content-Length')
+        if 'content-length' in args['headers']:
+            args['headers'].pop('content-length')
         
         args = webParser.get_source(args, params_list)
 
