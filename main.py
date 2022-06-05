@@ -9,7 +9,7 @@ import json
 import yaml
 
 class LoginBrute:
-    def __init__(self):
+    async def main():
     
         logging.basicConfig(
             filename="logs/" + datetime.now().strftime("%d-%m-%Y %H-%M") + ".log",
@@ -22,23 +22,28 @@ class LoginBrute:
             with open("config.yml", "r") as ymlfile:
                 args = yaml.safe_load(ymlfile)
 
-            # Opening params JSON file
-            f = open(args["params_list"])
-            params_list = json.load(f)
 
             pass_user = pandas.read_csv(args["pass_user"])
 
         except IOError as e:
             logging.error(e)
             sys.exit()
-            
-        args['headers'] = {k.lower(): v for k, v in args['headers'].items()}
+        
+        web_parser = webParser.webParser()
+        await web_parser.getsource(args['url'], args['params_list'])
+        
+        args['req_body'] = web_parser.post_data
+        args['method'] = web_parser.method
+        args['headers'] = web_parser.headers
+        args['req_body_type'] = web_parser.req_body_type
+        
+        args["url"] = WebInfo.get_admin_page(args['url'])
+        args["type"] = "javascript"  #
+   
+        args['headers'] = {k.lower(): v for k, v in web_parser.headers.items()}
+        
         for param in args['headers']:
             args['headers'][param] = str(args['headers'][param])
-            
-        url = args['headers']['referer']
-        args["url"] = WebInfo.get_admin_page(url)
-        args["type"] = "javascriapt"  #
 
         # remove content length and cookies from headers
         if 'cookie' in args['headers']:
@@ -47,7 +52,6 @@ class LoginBrute:
         if 'content-length' in args['headers']:
             args['headers'].pop('content-length')
         
-        args = webParser.get_source(args, params_list)
 
         args.update(pass_user)
 
@@ -55,5 +59,5 @@ class LoginBrute:
 
         attack.brute(args)
 
-
-LoginBrute()
+import asyncio
+asyncio.run(LoginBrute.main())

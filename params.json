@@ -6,5 +6,9 @@
 
     "user_param": [
         "username", "email", "log", "id"
+    ],
+
+    "ButtonList": [
+        "login", "sign in"
     ]
 }
