@@ -1,5 +1,5 @@
 from datetime import datetime
-import attack
+import attack1
 import WebInfo
 import pandas
 import webParser
@@ -7,7 +7,7 @@ import logging
 import sys
 import json
 import yaml
-
+from attack import headless
 class LoginBrute:
     async def main():
     
@@ -36,9 +36,10 @@ class LoginBrute:
         args['method'] = web_parser.method
         args['headers'] = web_parser.headers
         args['req_body_type'] = web_parser.req_body_type
-        
+        args['button'] = web_parser.button
         args["url"] = WebInfo.get_admin_page(args['url'])
         args["type"] = "javascript"  #
+        args['user_param'], args['password_param'] = web_parser.user_param, web_parser.password_param
    
         args['headers'] = {k.lower(): v for k, v in web_parser.headers.items()}
         
@@ -57,7 +58,7 @@ class LoginBrute:
 
         logging.info(json.dumps(args, indent=2, default=str))
 
-        attack.brute(args)
+        await headless.brute(args)
 
 import asyncio
 asyncio.run(LoginBrute.main())

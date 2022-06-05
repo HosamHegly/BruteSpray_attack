@@ -147,7 +147,8 @@ class webParser:
             if score > maxScore:
                 maxScore = score
                 pickedForm = form
-            
+                self.button = button
+        
         return pickedForm
 
 
