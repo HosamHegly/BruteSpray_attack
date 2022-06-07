@@ -1,4 +1,4 @@
-url: http://testphp.vulnweb.com/login.php
+url: https://brokencrystals.com/userlogin
 pass_user: pass_user.csv
 params_list: 
   password_param: [

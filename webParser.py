@@ -1,24 +1,19 @@
+
+from importlib.resources import contents
 import logging
-from tkinter import Button
-from typing import Tuple
-import urllib
-from collections import defaultdict
-from winsound import PlaySound
-from lxml import html
-import requests
-from requests_html import HTMLSession
+import random
 from playwright.async_api import async_playwright 
 from bs4 import BeautifulSoup as bs
-import time
+
 class webParser:
         
 
-    async def getsource(self, url, params_list):
+    async def getsource(self, url, params_list, pass_user):
         """
         find the username and password params in the body
         """
         p = await async_playwright().start()
-        browser = await p.firefox.launch(headless=False)
+        browser = await p.firefox.launch()
             
         page = await browser.new_page()
         await page.goto(url)
@@ -27,29 +22,41 @@ class webParser:
         body = await page.content()
         soup = bs(body, 'html.parser')
         buttons = soup.findAll(attrs={'type' : 'submit'})
-        form = self.findForm(buttons, params_list["ButtonList"])
-        #loginButton = form.findChild(attrs={'type':'submit'})
+        self.form = self.findForm(buttons, params_list["ButtonList"])
         
-        self.user_param, self.password_param = self.findUserPass(form, params_list["password_param"], params_list["user_param"])
-                
-        await self.getRequest(self.user_param, self.password_param, page)
+        self.user_param, self.password_param = self.findUserPass(self.form, params_list["password_param"], params_list["user_param"])
+        self.contentLen = 0
+        for i in range(0,2):
+            username = pass_user['Usernames'][random.randint(0, len(pass_user['Usernames']) - 1)]
+            password = self.pass_gen()
+            logging.info('random password generated: ' + str(password))
+            
+            await self.getRequest(self.user_param, self.password_param, page, username, password)
+            self.contentLen += self.contentLen
+            
+        self.contentLen = self.contentLen / 2
         await browser.close()
         await p.stop()
 
         self.req_body_type = self.get_req_type()
-
-        
-    #picks the login form in page
-    def pickForm(self, forms):
-        input_list = []
-        for form in forms:
-            for b in form:
-                print(str(b.get('value')))
+    
+    def pass_gen(self):
+        """
+        generate strong password randomly
+        """
+        char_seq = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
+        password = ''
+        for len in range(10):
+            random_char = random.choice(char_seq)
+            password += random_char
             
-            print(str(form))
-            # for b in form.buttons:
-            #     print(str(b))
-
+        # print(password)
+        list_pass = list(password)
+        random.shuffle(list_pass)
+        final_password = ''.join(list_pass)
+        return final_password
+    
+    
     #identify the user and password params in the body
     def findUserPass(self, form, passwords, usernames):
         print('\n\n\n\n\n\n\n'+str(form))
@@ -102,35 +109,42 @@ class webParser:
         if req.method == 'POST': 
             self.post_data = req.post_data_json
             self.method = req.method
-            self.headers = {k.lower(): v for k, v in req.headers.items()}
-            print('headers: ', str(type(self.headers)))
             self.action = req.url
+            self.headers = {k.lower(): v for k, v in req.headers.items()}
+
+            for param in self.headers:
+                self.headers[param] = str(self.headers[param])
+                
+            # remove content length and cookies from headers
+            if 'cookie' in self.headers:
+                self.headers.pop('cookie')
+                
+            if 'content-length' in self.headers:
+                self.headers.pop('content-length')
 
     
     def getResponse(self, response):
-        self.status = response.status
+        self.status_code = response.status
         
         
-    async def getRequest(self, username, password, page):
+    async def getRequest(self, username_element, password_element, page, username, password):
 
-        await page.fill('input[name='+username+']', 'test')
-        await page.fill('input[name='+password+']', 'test')
+        await page.fill('input[name='+ username_element +']',  username)
+        await page.fill('input[name='+ password_element +']', password)
         page.once("request", lambda req: self.getRequestData(req))
         page.once("response", lambda res: self.getResponse(res))
-        # response = await Promise.all([page.waitForResponse(str(self.url))
-        # print(response.status)
-
-
-        await page.locator('[type="submit"]:near(input[name='+ password+'])').click()
-        print(str(self.status))
+        await page.locator('[type="submit"]:near(input[name='+ password_element +'])').click()
+        content = await page.content()
+        self.contentLen = len(str(content))
         
         
 
     def formScore(self, form, button, buttonList):
         print('button list: '+ str(buttonList))
-        buttonValueScore = self.similarity_value(button['value'], buttonList)
+        buttonValueScore = 0
+        if 'value' in button:   
+            buttonValueScore = self.similarity_value(button['value'], buttonList)
         buttonTextScore = self.similarity_value(button.text, buttonList)
-        print('lol: ' + str(buttonValueScore) + ' ' + str(buttonTextScore))
         score = max(buttonValueScore, buttonTextScore)
         if score == 1:
             return 10

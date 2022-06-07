@@ -29,37 +29,21 @@ class LoginBrute:
             logging.error(e)
             sys.exit()
         
+
+        web_info = WebInfo.webInfo(args['url'])
+        
         web_parser = webParser.webParser()
-        await web_parser.getsource(args['url'], args['params_list'])
+        await web_parser.getsource(args['url'], args['params_list'], pass_user)
         
-        args['req_body'] = web_parser.post_data
-        args['method'] = web_parser.method
-        args['headers'] = web_parser.headers
-        args['req_body_type'] = web_parser.req_body_type
-        args['button'] = web_parser.button
-        args["url"] = WebInfo.get_admin_page(args['url'])
-        args["type"] = "javascript"  #
-        args['user_param'], args['password_param'] = web_parser.user_param, web_parser.password_param
-        args['action'] = web_parser.action
-   
-        # args['headers'] = {k.lower(): v for k, v in web_parser.headers.items()}
-        
-        for param in args['headers']:
-            args['headers'][param] = str(args['headers'][param])
-
-        # remove content length and cookies from headers
-        if 'cookie' in args['headers']:
-            args['headers'].pop('cookie')
-            
-        if 'content-length' in args['headers']:
-            args['headers'].pop('content-length')
-        
-
-        args.update(pass_user)
 
         logging.info(json.dumps(args, indent=2, default=str))
 
-        await headless.brute(args)
+        if web_info.type == 'javascript':
+            headless1 = headless.headless(web_info.url, web_parser,  pass_user)
+            await headless1.brute()
+        else:
+            pass
+
 
 import asyncio
 asyncio.run(LoginBrute.main())

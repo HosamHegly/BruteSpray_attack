@@ -14,11 +14,19 @@ def brute(parameters):
     parameters['statusCode'] = 'wrong'
     parameters['statusCode'] = get_status_code(parameters)
     
+    if 'javascipt':
+        hosam = headless()
+    else:
+        hosam = requests()
+        
     for username in parameters["Usernames"]:
         parameters["username"] = username.strip()
         for password in parameters["Passwords"]:
             parameters["password"] = password.strip()
-            attack(parameters)
+            hosam.attack(web_parser, params)
+            
+            if check_login(hosam):
+                pass
 
 
 def attack(content):
