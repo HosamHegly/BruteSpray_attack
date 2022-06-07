@@ -38,6 +38,7 @@ INFO:root:{
   "type": "javascript",
   "user_param": "uname",
   "password_param": "pass",
+  "action": "http://testphp.vulnweb.com/userinfo.php",
   "Usernames": "0        alqlambara@gmail.com\n1                     mohamad\n2                    m7mdassi\n3    mohamadassi173@gmail.com\nName: Usernames, dtype: object",
   "Passwords": "0         asdasd\n1    astmamsh123\n2      bara12340\n3         asdasd\nName: Passwords, dtype: object"
 }

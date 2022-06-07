@@ -17,7 +17,7 @@ INFO:root:{
     ]
   },
   "req_body": {
-    "uname": "test",
+    "uname": "test12",
     "pass": "test"
   },
   "method": "POST",

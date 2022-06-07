@@ -9,6 +9,7 @@ import requests
 from requests_html import HTMLSession
 from playwright.async_api import async_playwright 
 from bs4 import BeautifulSoup as bs
+import time
 class webParser:
         
 
@@ -21,6 +22,7 @@ class webParser:
             
         page = await browser.new_page()
         await page.goto(url)
+        await page.wait_for_load_state()
             
         body = await page.content()
         soup = bs(body, 'html.parser')
@@ -96,19 +98,31 @@ class webParser:
         inputName = max(inputs, key=lambda x: self.similarity_value(x, list)) 
         return inputName
 
-    def getData(self, req):
-        self.post_data = req.post_data_json
-        self.method = req.method
-        self.headers = req.headers
+    def getRequestData(self, req):
+        if req.method == 'POST': 
+            self.post_data = req.post_data_json
+            self.method = req.method
+            self.headers = {k.lower(): v for k, v in req.headers.items()}
+            print('headers: ', str(type(self.headers)))
+            self.action = req.url
+
+    
+    def getResponse(self, response):
+        self.status = response.status
+        
         
     async def getRequest(self, username, password, page):
+
         await page.fill('input[name='+username+']', 'test')
         await page.fill('input[name='+password+']', 'test')
-        page.on("request", lambda req: self.getData(req))
-        # await print(str(req))
+        page.once("request", lambda req: self.getRequestData(req))
+        page.once("response", lambda res: self.getResponse(res))
+        # response = await Promise.all([page.waitForResponse(str(self.url))
+        # print(response.status)
+
 
         await page.locator('[type="submit"]:near(input[name='+ password+'])').click()
-
+        print(str(self.status))
         
         
 

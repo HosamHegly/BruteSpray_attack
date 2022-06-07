@@ -40,8 +40,9 @@ class LoginBrute:
         args["url"] = WebInfo.get_admin_page(args['url'])
         args["type"] = "javascript"  #
         args['user_param'], args['password_param'] = web_parser.user_param, web_parser.password_param
+        args['action'] = web_parser.action
    
-        args['headers'] = {k.lower(): v for k, v in web_parser.headers.items()}
+        # args['headers'] = {k.lower(): v for k, v in web_parser.headers.items()}
         
         for param in args['headers']:
             args['headers'][param] = str(args['headers'][param])

@@ -52,7 +52,7 @@ async def attack(content, page):
 
     await content['buttonClick'].click()
     status_code = content['status_code']
-    print(str(status_code))
+    #print(str(status_code))
 
     # if check_login(resp, content, payload):
     #     logging.info(
