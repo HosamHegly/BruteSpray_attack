@@ -1,14 +1,13 @@
-
-from importlib.resources import contents
 import logging
 import random
+import requests
 from playwright.async_api import async_playwright 
 from bs4 import BeautifulSoup as bs
 
 class webParser:
         
 
-    async def getsource(self, url, params_list, pass_user):
+    async def getsource(self, url, params_list, pass_user) -> None:
         """
         find the username and password params in the body
         """
@@ -17,30 +16,32 @@ class webParser:
             
         page = await browser.new_page()
         await page.goto(url)
-        await page.wait_for_load_state()
+        await page.wait_for_selector('input[type=submit], button[type=submit]')
             
         body = await page.content()
+        body = requests.get(url).content
         soup = bs(body, 'html.parser')
-        buttons = soup.findAll(attrs={'type' : 'submit'})
-        self.form = self.findForm(buttons, params_list["ButtonList"])
+        # buttons = soup.findAll(attrs={'type' : 'submit'})
+        forms = soup.findAll('form')
+        self.form = self.findForm(forms, params_list["ButtonList"])
         
-        self.user_param, self.password_param = self.findUserPass(self.form, params_list["password_param"], params_list["user_param"])
+        self.user_param, self.password_param = self._findUserPass(self.form, params_list["password_param"], params_list["user_param"])
         self.contentLen = 0
         for i in range(0,2):
             username = pass_user['Usernames'][random.randint(0, len(pass_user['Usernames']) - 1)]
-            password = self.pass_gen()
+            password = self._pass_gen()
             logging.info('random password generated: ' + str(password))
             
-            await self.getRequest(self.user_param, self.password_param, page, username, password)
+            await self._getRequest(self.user_param, self.password_param, page, username, password)
             self.contentLen += self.contentLen
             
         self.contentLen = self.contentLen / 2
         await browser.close()
         await p.stop()
 
-        self.req_body_type = self.get_req_type()
+        self.req_body_type = self._get_req_type()
     
-    def pass_gen(self):
+    def _pass_gen(self) -> str:
         """
         generate strong password randomly
         """
@@ -50,7 +51,6 @@ class webParser:
             random_char = random.choice(char_seq)
             password += random_char
             
-        # print(password)
         list_pass = list(password)
         random.shuffle(list_pass)
         final_password = ''.join(list_pass)
@@ -58,7 +58,7 @@ class webParser:
     
     
     #identify the user and password params in the body
-    def findUserPass(self, form, passwords, usernames):
+    def _findUserPass(self, form, passwords, usernames) -> tuple:
         print('\n\n\n\n\n\n\n'+str(form))
         username = None
         password = None
@@ -73,14 +73,14 @@ class webParser:
                     password = inputName
         
         if not username:
-            username = self.pick_param(inputs, usernames) 
+            username = self._pick_param(inputs, usernames) 
             inputs.pop(username)
         if not password: 
-            password = self.pick_param(inputs, passwords) 
+            password = self._pick_param(inputs, passwords) 
 
         return username, password
 
-    def jaccard_similarity(self, a, b):
+    def _jaccard_similarity(self, a, b):
         # convert to set
         a = set(a)
         b = set(b)
@@ -89,23 +89,23 @@ class webParser:
         return j
 
 
-    def similarity_value(self, param, usernames):
+    def _similarity_value(self, param, usernames):
         if not param:
             return 0
         max = 0
         for uname in usernames:
-            score = self.jaccard_similarity(param.lower(), uname)
+            score = self._jaccard_similarity(param.lower(), uname)
             if score > max:
                 max = score
         return max
 
 
-    def pick_param(self, inputs, list):
+    def _pick_param(self, inputs, list):
         #param with max potetntial for being the username
-        inputName = max(inputs, key=lambda x: self.similarity_value(x, list)) 
+        inputName = max(inputs, key=lambda x: self._similarity_value(x, list)) 
         return inputName
 
-    def getRequestData(self, req):
+    def _getRequestData(self, req) -> None:
         if req.method == 'POST': 
             self.post_data = req.post_data_json
             self.method = req.method
@@ -123,28 +123,33 @@ class webParser:
                 self.headers.pop('content-length')
 
     
-    def getResponse(self, response):
+    def _getResponse(self, response) -> None:
         self.status_code = response.status
         
         
-    async def getRequest(self, username_element, password_element, page, username, password):
+    async def _getRequest(self, username_element, password_element, page, username, password) -> None:
 
         await page.fill('input[name='+ username_element +']',  username)
         await page.fill('input[name='+ password_element +']', password)
-        page.once("request", lambda req: self.getRequestData(req))
-        page.once("response", lambda res: self.getResponse(res))
-        await page.locator('[type="submit"]:near(input[name='+ password_element +'])').click()
+        logging.info('username_element: ' + str(username_element) )
+        logging.info('password_element: ' + str(password_element) )
+
+        page.once("request", lambda req: self._getRequestData(req))
+        page.once("response", lambda res: self._getResponse(res))
+        await page.locator(self.button_attr).click()
+        # await page.wait_for_event('response',timeout=5)
+
         content = await page.content()
         self.contentLen = len(str(content))
         
         
 
-    def formScore(self, form, button, buttonList):
+    def formScore(self, form, button, buttonList) -> float:
         print('button list: '+ str(buttonList))
         buttonValueScore = 0
         if 'value' in button:   
-            buttonValueScore = self.similarity_value(button['value'], buttonList)
-        buttonTextScore = self.similarity_value(button.text, buttonList)
+            buttonValueScore = self._similarity_value(button['value'], buttonList)
+        buttonTextScore = self._similarity_value(button.text, buttonList)
         score = max(buttonValueScore, buttonTextScore)
         if score == 1:
             return 10
@@ -166,35 +171,52 @@ class webParser:
             score += 0.5
         if len(form.findChildren('input', {'type' : 'email'})) == 1:
             score += 0.3
-        
-    def findForm(self, buttons, buttonList):
+        return score
+            
+    def buttonLocator(self, button) -> None:
+        if button.text is not None and button.text != '':
+            print('button.text: ' + button.text)
+            button_att = button.name + ':text("' + button.text + '"' +')'
+            
+        else:   
+            button_att = button.name
+            print('button.name: ' + button.name)
+            for k in button.attrs:
+                if k != 'style':
+                    attr = button[k]
+                    if isinstance(button[k], list):
+                        attr = str(' '.join(button[k]))
+                    button_att += '['+ k + '=' + attr.replace(' ','\ ')+']'
+        print('button_att' + button_att)
+        self.button_attr = button_att
+            
+    def findForm(self, forms, buttonList):
         maxScore = 0
-        for button in buttons:
-            form = button.findParent('form')
+        for form in forms:
+            button = form.findChild(attrs={'type' : 'submit'})
             score = self.formScore(form, button, buttonList)
             if score > maxScore:
                 maxScore = score
                 pickedForm = form
-                self.button = button
+                self.buttonLocator(button)
         
         return pickedForm
+        
 
 
         
         # get content type from headers
-    def get_req_type(self):
+    def _get_req_type(self) -> str:
         type = self.headers["content-type"]
 
         if "json" in type:
             return "JSON"
 
         elif "xml" in type:
-            import xmltodict
+            return "XML"
             
         elif "multipart" in type:
             return "multipart"
 
         else:
-            import urllib
-
             return "URL_ENCODED"

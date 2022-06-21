@@ -1,9 +1,26 @@
-from playwright.sync_api import sync_playwright
-from bs4 import BeautifulSoup
+from cgitb import text
+import logging
+from struct import pack
+import sys
+import time
+
+import soupsieve
+import re
+import webParser
 import requests
+from bs4 import BeautifulSoup
+from lxml import html
+import asyncio
+from playwright.async_api import async_playwright
 
-print((abs(100 - 70) / 80) * 100.0)
 
-'''payload = {'uname': 'test1', 'pass': 'testt'}
-resp = requests.post(url='http://testphp.vulnweb.com/userinfo.php', data = payload, allow_redirects=False)
-print(resp.text)'''
+
+def main():
+
+    packet = {'uname' : 'assi', 'pass' : 'test'}
+    res = requests.post("http://testphp.vulnweb.com/userinfo.php",data=packet)
+    
+    print(res.history[0].status_code)
+   
+# asyncio.run(main())
+main()
