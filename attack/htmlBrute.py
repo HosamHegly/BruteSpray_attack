@@ -46,7 +46,7 @@ class htmlBrute:
         
         post_response = self._post(payload, cookies)
 
-        if self._check_login(post_response):
+        if self._check_login(post_response, get_response):
             logging.info(
                 "login successfull\n\nusername: "
                 + username
@@ -58,6 +58,7 @@ class htmlBrute:
 
     def _post(self, payload, cookies) -> requests.models.Response:
         header = self._web_parser.headers
+        header['accept-encoding'] = 'identity'
         if self._web_parser.req_body_type == "XML":
                 pass
 
@@ -78,27 +79,31 @@ class htmlBrute:
             self.status_code = post_response.status_code
         return post_response
 
-    def _check_login(self, post_response) -> bool:
+    def _check_login(self, post_response, get_response) -> bool:
         """
         checks if login was successful by checking if status code changed and checks if form is still in the page
         """
-        logging.info('current status code: ' + str(self.status_code))
-        logging.info('current content: ' + str(post_response.text))
+
         if self.status_code >= 400:
             return False
 
         elif self.status_code != self._web_parser.status_code:
+            logging.info('[check_login] Status code changed!: ' + str(self.status_code))
             return True
         
-        
-        elif ((abs(len(post_response.text) - self._web_parser.contentLen) / self._web_parser.contentLen) * 100.0) >= 10:
-            print('lol: 1' ) 
-            return True
-        
+        from html_similarity import style_similarity, structural_similarity, similarity
+        k=0.3
         parser = BeautifulSoup(post_response.text, 'html.parser')
         forms = parser.findAll('form')
-        if self._web_parser.form not in forms: 
-            print('lol: 2' )           
+        webParser_form = self._web_parser.form
+        max_similarity = 0
+        for web_form in forms:
+            similarity = k * structural_similarity(str(webParser_form), str(web_form)) + (1 - k) * style_similarity(str(webParser_form), str(web_form))
+            if similarity > max_similarity:
+                max_similarity = similarity
+        logging.info(' max_similarity: ' + str( max_similarity))
+        if max_similarity < 0.8:
+            logging.info('[check_login] max_similarity: ' + str(max_similarity))      
             return True
 
         return False

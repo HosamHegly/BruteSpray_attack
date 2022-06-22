@@ -1,4 +1,4 @@
-url: https://alqlambara.com/clothes/wp-login.php
+url: https://alqlambara.com/wp-login.php
 pass_user: pass_user.csv
 params_list: 
   password_param: [

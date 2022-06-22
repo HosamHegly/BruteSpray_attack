@@ -3,6 +3,7 @@ from urllib import request
 import attack1
 import WebInfo
 import pandas
+import requests
 import webParser
 import logging
 import sys
@@ -30,13 +31,11 @@ class LoginBrute:
         except IOError as e:
             logging.error(e)
             sys.exit()
-        
-
+    
         web_info = WebInfo.webInfo(args['url'])
         web_parser = webParser.webParser()
         await web_parser.getsource(args['url'], args['params_list'], pass_user)
         
-
         logging.info(json.dumps(args, indent=2, default=str))
         logging.info(json.dumps(web_parser.__dict__, indent=2, default=str))
         

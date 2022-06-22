@@ -19,7 +19,8 @@ class webParser:
         await page.wait_for_selector('input[type=submit], button[type=submit]')
             
         body = await page.content()
-        body = requests.get(url).content
+        # headers = {'accept-encoding' : 'identity'}
+        # body = requests.get(url, headers=headers).content
         soup = bs(body, 'html.parser')
         # buttons = soup.findAll(attrs={'type' : 'submit'})
         forms = soup.findAll('form')
@@ -59,7 +60,6 @@ class webParser:
     
     #identify the user and password params in the body
     def _findUserPass(self, form, passwords, usernames) -> tuple:
-        print('\n\n\n\n\n\n\n'+str(form))
         username = None
         password = None
         inputs = {}
@@ -145,7 +145,6 @@ class webParser:
         
 
     def formScore(self, form, button, buttonList) -> float:
-        print('button list: '+ str(buttonList))
         buttonValueScore = 0
         if 'value' in button:   
             buttonValueScore = self._similarity_value(button['value'], buttonList)
@@ -175,19 +174,16 @@ class webParser:
             
     def buttonLocator(self, button) -> None:
         if button.text is not None and button.text != '':
-            print('button.text: ' + button.text)
             button_att = button.name + ':text("' + button.text + '"' +')'
             
         else:   
             button_att = button.name
-            print('button.name: ' + button.name)
             for k in button.attrs:
                 if k != 'style':
                     attr = button[k]
                     if isinstance(button[k], list):
                         attr = str(' '.join(button[k]))
                     button_att += '['+ k + '=' + attr.replace(' ','\ ')+']'
-        print('button_att' + button_att)
         self.button_attr = button_att
             
     def findForm(self, forms, buttonList):
