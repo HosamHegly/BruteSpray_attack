@@ -15,4 +15,5 @@ class webInfo:
                 self.url += '/index.php?option=com_users&lang=en&view=login' 
         elif 'Drupal' in wappalyzer:
             self.url += 'user/login'
-        self.type = 'javascripts'
+            
+        self.type = 'html'

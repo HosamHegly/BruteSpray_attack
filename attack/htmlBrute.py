@@ -18,6 +18,7 @@ class htmlBrute:
             for password in self._pass_user["Passwords"]:
                 self._attack(username, password)
 
+
     def _attack(self, username, password) -> None:
         """
         create a packet containing fake headers and the payload(username,password) and submit it to the server
@@ -58,7 +59,7 @@ class htmlBrute:
 
     def _post(self, payload, cookies) -> requests.models.Response:
         header = self._web_parser.headers
-        header['accept-encoding'] = 'identity'
+        header['accept-encoding'] = 'identity' # check this later !
         if self._web_parser.req_body_type == "XML":
                 pass
 
@@ -85,6 +86,7 @@ class htmlBrute:
         """
 
         if self.status_code >= 400:
+            logging.info('[check_login] Status code changed and its >= 400 ! : ' + str(self.status_code))
             return False
 
         elif self.status_code != self._web_parser.status_code:

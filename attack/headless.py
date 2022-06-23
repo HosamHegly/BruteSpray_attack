@@ -17,7 +17,7 @@ class headless:
         """
         p = await async_playwright().start()
     
-        browser = await p.firefox.launch(headless=False)
+        browser = await p.firefox.launch()
         page = await browser.new_page()
         await page.goto(self._url)
 
@@ -68,6 +68,7 @@ class headless:
             return False
 
         elif self.status_code != self._web_parser.status_code:
+            logging.info('[check_login] Status code changed!: ' + str(self.status_code))
             return True
         
         elif ((abs(len(content) - self._web_parser.contentLen) / self._web_parser.contentLen) * 100.0) >= 20:
