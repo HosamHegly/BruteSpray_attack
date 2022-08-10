@@ -4,19 +4,37 @@ import requests
 from bs4 import BeautifulSoup
 
 class htmlBrute:
+    """
+    this class performs a bruteforce attack using requests library
+    each login attempt is actually a forged post packet containing the username, password and may contain
+    tokens. the login packets are sent to the login server, each login attempt is checked wether it is 
+    successful by checking the response status code , content length, html... 
+    """
     
-    def __init__(self, url, web_parser,  pass_user) -> None:
+    def __init__(self, url, web_parser,  pass_user, parallel) -> None:
         self._url = url
         self._web_parser = web_parser
         self._pass_user = pass_user
+        self.parallel = parallel
+    
     
     def brute(self) -> None:
         """
         sends all combinations for usernames and passwords to the attack function on the login page
         """
-        for username in self._pass_user["Usernames"]:
-            for password in self._pass_user["Passwords"]:
-                self._attack(username, password)
+        
+        # attempts each username with the parallel password in the csv file
+        if self.parallel:
+            index = min(len(self._pass_user["Usernames"]), len(self._pass_user["Passwords"]))
+            for username_index in range(0, index):
+                self._attack(self._pass_user["Usernames"][username_index], self._pass_user["Passwords"][username_index])
+        
+        # attempts each username with every password in the csv file (cartesian multiplication)
+        else:
+            for username in self._pass_user['Usernames']:
+                for password in self._pass_user['Passwords']:
+                    self._attack(username, password)
+
 
 
     def _attack(self, username, password) -> None:
@@ -58,12 +76,15 @@ class htmlBrute:
             sys.exit(1)
 
     def _post(self, payload, cookies) -> requests.models.Response:
+        """
+        sends the login post request with the correct body type (supports json, multipart and urlencoded)
+        and fetchs the response status code
+        """
+        
         header = self._web_parser.headers
-        header['accept-encoding'] = 'identity' # check this later !
-        if self._web_parser.req_body_type == "XML":
-                pass
+        header['accept-encoding'] = 'identity'
 
-        elif self._web_parser.req_body_type == "JSON":
+        if self._web_parser.req_body_type == "JSON":
             post_response = requests.post(self._web_parser.action, json=payload, cookies=cookies, headers=header)
 
         elif self._web_parser.req_body_type == "multipart":
@@ -84,11 +105,11 @@ class htmlBrute:
         """
         checks if login was successful by checking if status code changed and checks if form is still in the page
         """
+        logging.info('[check_login] Status code!: ' + str(self.status_code))
 
         if self.status_code >= 400:
             logging.info('[check_login] Status code changed and its >= 400 ! : ' + str(self.status_code))
             return False
-
         elif self.status_code != self._web_parser.status_code:
             logging.info('[check_login] Status code changed!: ' + str(self.status_code))
             return True
@@ -115,6 +136,10 @@ class htmlBrute:
 
 
     def _change_cookiesToken(self, cookies_jar, req_body) -> tuple:
+        '''
+        checks if the post request body contains key that are also found in the page's get response
+        cookies, if it does the it updates the post request body based on the cookies values
+        '''
         cookies = {}
         for cookie in cookies_jar:
             cookies[cookie.name] = cookie.value

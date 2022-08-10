@@ -1,31 +1,46 @@
 import logging
 import random
-import requests
+import time
+from urllib import response
 from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup as bs
 
 
 class webParser:
+    """
+    this class' main purpose is to get the needed information to perform the attack successfully
+    * initiates a playwright instance  with firefox web driver and goes to the login page.
+    * locates the login form using a scoring system.
+    * locates the username and password input fields and the login button
+    * builds a string for the css locator for the login button
+    * performs 2 failed login attempts with randomly generated passwords to retrieves the response status code, headers, body and content length
+
+
+    """
+
     async def getsource(self, url, params_list, pass_user) -> None:
-        """
-        find the username and password params in the body
-        """
+        """ """
         p = await async_playwright().start()
         browser = await p.firefox.launch()
-
         page = await browser.new_page()
         await page.goto(url)
         await page.wait_for_selector("input[type=submit], button[type=submit]")
 
+        self.headers = None
         body = await page.content()
-
         soup = bs(body, "html.parser")
         forms = soup.findAll("form")
-        self.form = self.findForm(forms, params_list["ButtonList"])
+        self.form = self.findForm(
+            forms, params_list["ButtonList"], params_list["loginTexts"]
+        )
 
         self.user_param, self.password_param = self._findUserPass(
             self.form, params_list["password_param"], params_list["user_param"]
         )
+
+        # performs 2 failed login attempts by choosing 2 random usernames from
+        # the csv files and generating 2 random passwords and calculates the average
+        # content length of the 2 failed attempt response pages
         self.contentLen = 0
         for i in range(0, 2):
             username = pass_user["Usernames"][
@@ -42,26 +57,14 @@ class webParser:
         self.contentLen = self.contentLen / 2
         await browser.close()
         await p.stop()
-
+        # get request body content type
         self.req_body_type = self._get_req_type()
 
-    def _pass_gen(self) -> str:
-        """
-        generate strong password randomly
-        """
-        char_seq = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
-        password = ""
-        for len in range(10):
-            random_char = random.choice(char_seq)
-            password += random_char
-
-        list_pass = list(password)
-        random.shuffle(list_pass)
-        final_password = "".join(list_pass)
-        return final_password
-
-    # identify the user and password params in the body
     def _findUserPass(self, form, passwords, usernames) -> tuple:
+        """ "
+        identify the user and password params in the body
+        """
+
         username = None
         password = None
         inputs = {}
@@ -82,34 +85,17 @@ class webParser:
 
         return username, password
 
-    def _jaccard_similarity(self, a, b):
-        # convert to set
-        a = set(a)
-        b = set(b)
-        # calucate jaccard similarity
-        j = float(len(a.intersection(b))) / len(a.union(b))
-        return j
+    async def _getRequestData(self, req) -> None:
+        """
+        fetch request method, url, body, response status_code, request headers
+        """
 
-    def _similarity_value(self, param, usernames):
-        if not param:
-            return 0
-        max = 0
-        for uname in usernames:
-            score = self._jaccard_similarity(param.lower(), uname)
-            if score > max:
-                max = score
-        return max
-
-    def _pick_param(self, inputs, list):
-        # param with max potetntial for being the username
-        inputName = max(inputs, key=lambda x: self._similarity_value(x, list))
-        return inputName
-
-    def _getRequestData(self, req) -> None:
         if req.method == "POST":
             self.post_data = req.post_data_json
             self.method = req.method
             self.action = req.url
+            response = await req.response()
+            self.status_code = response.status
             self.headers = {k.lower(): v for k, v in req.headers.items()}
 
             for param in self.headers:
@@ -122,37 +108,56 @@ class webParser:
             if "content-length" in self.headers:
                 self.headers.pop("content-length")
 
-    def _getResponse(self, response) -> None:
-        self.status_code = response.status
-
     async def _getRequest(
         self, username_element, password_element, page, username, password
     ) -> None:
 
         await page.fill("input[name=" + username_element + "]", username)
         await page.fill("input[name=" + password_element + "]", password)
+
         logging.info("username_element: " + str(username_element))
         logging.info("password_element: " + str(password_element))
 
-        page.once("request", lambda req: self._getRequestData(req))
-        page.once("response", lambda res: self._getResponse(res))
+        page.once("request", self._getRequestData)
         await page.locator(self.button_attr).click()
-        # await page.wait_for_event('response',timeout=5)
-
         content = await page.content()
+        self._wait()
+
         self.contentLen = len(str(content))
 
-    def formScore(self, form, button, buttonList) -> float:
+    def _wait(self):
+        while self.headers == None:
+            time.sleep(1)
+
+    def formScore(self, form, button, buttonList, loginTexts) -> float:
+        """
+        gives each form a score on how likely it being the login
+        form based on the form's button id, name, value, the forms structure and texts
+        found in the form such as "login" or "sign in"
+        """
+
         buttonValueScore = 0
+        buttonNameScore = 0
+        buttonIdScore = 0
+        score = 0
         if "value" in button:
             buttonValueScore = self._similarity_value(button["value"], buttonList)
+        if "name" in button:
+            buttonNameScore = self._similarity_value(button["name"], buttonList)
+        if "id" in button:
+            buttonIdScore = self._similarity_value(button["id"], buttonList)
         buttonTextScore = self._similarity_value(button.text, buttonList)
-        score = max(buttonValueScore, buttonTextScore)
-        if score == 1:
+
+        button_score = max(
+            buttonValueScore, buttonTextScore, buttonNameScore, buttonIdScore
+        )
+
+        if button_score == 1:
             return 10
 
-        # check this later!
-        for label in buttonList:
+        score += button_score
+
+        for label in loginTexts:
             if label in str(form.text).lower():
                 score += 0.3
 
@@ -174,35 +179,41 @@ class webParser:
             score += 0.3
         return score
 
-    def buttonLocator(self, button) -> None:
-        if button.text is not None and button.text != "":
-            button_att = button.name + ':text("' + button.text + '"' + ")"
+    def findForm(self, forms, buttonList, loginTexts):
+        """
+        Picks the form with highest score
+        """
 
-        else:
-            button_att = button.name
-            for k in button.attrs:
-                if k != "style":
-                    attr = button[k]
-                    if isinstance(button[k], list):
-                        attr = str(" ".join(button[k]))
-                    button_att += "[" + k + "=" + attr.replace(" ", "\ ") + "]"
-        self.button_attr = button_att
-
-    def findForm(self, forms, buttonList):
         maxScore = 0
         for form in forms:
-            button = form.findChild(attrs={"type": "submit"}) # check this 
-            score = self.formScore(form, button, buttonList)
-            if score > maxScore:
-                maxScore = score
-                pickedForm = form
-                self.buttonLocator(button)
+            buttons = form.findChildren(attrs={"type": "submit"})
+            if len(buttons) == 0:
+                buttons = form.findChildren(attrs={"type": "Button"})
+
+            for button in buttons:
+                score = self.formScore(form, button, buttonList, loginTexts)
+                if score > maxScore:
+                    maxScore = score
+                    pickedForm = form
+                    self.buttonLocator(button)
 
         return pickedForm
 
-        # get content type from headers
+    def buttonLocator(self, button) -> None:
+        """
+        Build a string locator based on the button element's attributes
+        """
+        button_att = button.name
+        for k in button.attrs:
+            if k != "style":
+                attr = button[k]
+                if isinstance(button[k], list):
+                    attr = str(" ".join(button[k]))
+                button_att += "[" + k + "=" + attr.replace(" ", "\ ") + "]"
+        self.button_attr = button_att
 
     def _get_req_type(self) -> str:
+        """get content type from headers"""
         type = self.headers["content-type"]
 
         if "json" in type:
@@ -216,3 +227,41 @@ class webParser:
 
         else:
             return "URL_ENCODED"
+
+    def _pass_gen(self) -> str:
+        """
+        generate strong password randomly
+        """
+        char_seq = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
+        password = ""
+        for len in range(10):
+            random_char = random.choice(char_seq)
+            password += random_char
+
+        list_pass = list(password)
+        random.shuffle(list_pass)
+        final_password = "".join(list_pass)
+        return final_password
+
+    def _pick_param(self, inputs, list):
+        """ "param with max potential for being the username or password"""
+        inputName = max(inputs, key=lambda x: self._similarity_value(x, list))
+        return inputName
+
+    def _jaccard_similarity(self, a, b):
+        # convert to set
+        a = set(a)
+        b = set(b)
+        # calucate jaccard similarity
+        j = float(len(a.intersection(b))) / len(a.union(b))
+        return j
+
+    def _similarity_value(self, param, usernames):
+        if not param:
+            return 0
+        max = 0
+        for uname in usernames:
+            score = self._jaccard_similarity(param.lower(), uname)
+            if score > max:
+                max = score
+        return max
