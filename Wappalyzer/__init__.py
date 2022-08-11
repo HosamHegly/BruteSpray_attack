@@ -6,6 +6,5 @@ Welcome to ``python-Wappalyzer`` API documentation!
 
 from .Wappalyzer import Wappalyzer, analyze
 from .webpage import WebPage
-__all__ = ["Wappalyzer", 
-           "WebPage", 
-           "analyze"]
+
+__all__ = ["Wappalyzer", "WebPage", "analyze"]

@@ -1,14 +1,10 @@
-pass_user: pass_user.csv
+pass_user: pass_user.csv # Usernames and passwords list path
 
-Technologies: [
-  "WordPress", "CMS Hub", "Drupal", "Joomla", "Shopify", "Prestashop", "Magento", "Webflow", "Concrete5", "TYPO3", "Ghost","Squarespace", "Wix", "Weebly", "Jimdo", "IONOS", "WebNode", "Mozello", "Site123", "Tumblr", "Medium", "Blogger", 
-]
-
-params_list: 
-  password_param: [
+paramsList: 
+  passwordParam: [
       "password"
   ]
-  user_param: [
+  userParam: [
       "username", "email", "log", "id"
   ]
   # these strings are used in a scoring system in order to locate the login button in the form 
@@ -21,3 +17,10 @@ params_list:
   loginTexts: [
     'log-in', 'sign-in', 'log in',"login", "sign in"   
   ]
+
+Technologies: {
+  "WordPress": "/wp-login.php", "CMS Hub": "", "Drupal": "?q=user/login", "/administrator": "", 
+  "Prestashop": "/admin", "Magento": "/magento/admin", "Webflow": "", "Concrete5": "", "TYPO3": "",
+   "Ghost": "", "Squarespace": "", "Wix": "", "Weebly": "", "Jimdo": "", "IONOS": "",
+    "WebNode": "", "Mozello": "", "Site123": "", "Tumblr": "", "Medium": "", "Blogger": "", 
+}

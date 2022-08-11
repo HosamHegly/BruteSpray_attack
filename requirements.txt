@@ -1,0 +1,13 @@
+pandas
+PyYAML
+python-Wappalyzer
+builtwith
+bs4
+playwright
+requests
+beautifulsoup4
+html_similarity
+aiohttp
+cached_property
+dom_query
+pytest

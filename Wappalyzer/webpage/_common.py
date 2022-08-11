@@ -5,41 +5,49 @@ Wraps only the information strictly necessary to run the Wappalyzer engine.
 
 import abc
 from typing import Iterable, List, Mapping, Any
+
 try:
     from typing import Protocol
 except ImportError:
-    Protocol = object # type: ignore
+    Protocol = object  # type: ignore
 
 import aiohttp
 import requests
 from requests.structures import CaseInsensitiveDict
 
-def _raise_not_dict(obj:Any, name:str) -> None:
+
+def _raise_not_dict(obj: Any, name: str) -> None:
     try:
         list(obj.keys())
-    except AttributeError: 
+    except AttributeError:
         raise ValueError(f"{name} must be a dictionary-like object")
+
 
 class ITag(Protocol):
     """
     A HTML tag, decoupled from any particular HTTP library's API.
     """
+
     name: str
     attributes: Mapping[str, str]
     inner_html: str
+
 
 class BaseTag(ITag, abc.ABC):
     """
     Subclasses must implement inner_html().
     """
-    def __init__(self, name:str, attributes:Mapping[str, str]) -> None:
+
+    def __init__(self, name: str, attributes: Mapping[str, str]) -> None:
         _raise_not_dict(attributes, "attributes")
         self.name = name
         self.attributes = attributes
+
     @property
-    def inner_html(self) -> str: # type: ignore
+    def inner_html(self) -> str:  # type: ignore
         """Returns the inner HTML of an element as a UTF-8 encoded bytestring"""
         raise NotImplementedError()
+
 
 class IWebPage(Protocol):
     """
@@ -47,13 +55,16 @@ class IWebPage(Protocol):
 
     Simple representation of a web page, decoupled from any particular HTTP library's API.
     """
+
     url: str
     html: str
     headers: Mapping[str, str]
     scripts: List[str]
     meta: Mapping[str, str]
-    def select(self, selector:str) -> Iterable[ITag]: 
+
+    def select(self, selector: str) -> Iterable[ITag]:
         raise NotImplementedError()
+
 
 class BaseWebPage(IWebPage):
     """
@@ -61,9 +72,10 @@ class BaseWebPage(IWebPage):
 
     Subclasses must implement _parse_html() and select(string).
     """
-    def __init__(self, url:str, html:str, headers:Mapping[str, str]):
+
+    def __init__(self, url: str, html: str, headers: Mapping[str, str]):
         """
-        Initialize a new WebPage object manually.  
+        Initialize a new WebPage object manually.
 
         >>> from Wappalyzer import WebPage
         >>> w = WebPage('exemple.com',  html='<strong>Hello World</strong>', headers={'Server': 'Apache', })
@@ -82,9 +94,9 @@ class BaseWebPage(IWebPage):
 
     def _parse_html(self):
         raise NotImplementedError()
-    
+
     @classmethod
-    def new_from_url(cls, url: str, **kwargs:Any) -> IWebPage:
+    def new_from_url(cls, url: str, **kwargs: Any) -> IWebPage:
         """
         Constructs a new WebPage object for the URL,
         using the `requests` module to fetch the HTML.
@@ -92,19 +104,19 @@ class BaseWebPage(IWebPage):
         >>> from Wappalyzer import WebPage
         >>> page = WebPage.new_from_url('exemple.com', timeout=5)
 
-        :param url: URL 
+        :param url: URL
         :param headers: (optional) Dictionary of HTTP Headers to send.
         :param cookies: (optional) Dict or CookieJar object to send.
-        :param timeout: (optional) How many seconds to wait for the server to send data before giving up. 
+        :param timeout: (optional) How many seconds to wait for the server to send data before giving up.
         :param proxies: (optional) Dictionary mapping protocol to the URL of the proxy.
-        :param verify: (optional) Boolean, it controls whether we verify the SSL certificate validity. 
-        :param \*\*kwargs: Any other arguments are passed to `requests.get` method as well. 
+        :param verify: (optional) Boolean, it controls whether we verify the SSL certificate validity.
+        :param \*\*kwargs: Any other arguments are passed to `requests.get` method as well.
         """
         response = requests.get(url, **kwargs)
         return cls.new_from_response(response)
 
     @classmethod
-    def new_from_response(cls, response:requests.Response) -> IWebPage:
+    def new_from_response(cls, response: requests.Response) -> IWebPage:
         """
         Constructs a new WebPage object for the response,
         using the `BeautifulSoup` module to parse the HTML.
@@ -113,10 +125,14 @@ class BaseWebPage(IWebPage):
         """
         return cls(response.url, html=response.text, headers=response.headers)
 
-
     @classmethod
-    async def new_from_url_async(cls, url: str, verify: bool = True,
-                                 aiohttp_client_session: aiohttp.ClientSession = None, **kwargs:Any) -> IWebPage:
+    async def new_from_url_async(
+        cls,
+        url: str,
+        verify: bool = True,
+        aiohttp_client_session: aiohttp.ClientSession = None,
+        **kwargs: Any,
+    ) -> IWebPage:
         """
         Same as new_from_url only Async.
 
@@ -127,15 +143,15 @@ class BaseWebPage(IWebPage):
         >>> from aiohttp import ClientSession
         >>> async with ClientSession() as session:
         ...     page = await WebPage.new_from_url_async(aiohttp_client_session=session)
-        
+
         :param url: URL
         :param aiohttp_client_session: `aiohttp.ClientSession` instance to use, optional.
-        :param verify: (optional) Boolean, it controls whether we verify the SSL certificate validity. 
+        :param verify: (optional) Boolean, it controls whether we verify the SSL certificate validity.
         :param headers: Dict. HTTP Headers to send with the request (optional).
         :param cookies: Dict. HTTP Cookies to send with the request (optional).
         :param timeout: Int. override the session's timeout (optional)
         :param proxy: Proxy URL, `str` or `yarl.URL` (optional).
-        :param \*\*kwargs: Any other arguments are passed to `aiohttp.ClientSession.get` method as well. 
+        :param \*\*kwargs: Any other arguments are passed to `aiohttp.ClientSession.get` method as well.
 
         """
 
@@ -147,7 +163,9 @@ class BaseWebPage(IWebPage):
             return await cls.new_from_response_async(response)
 
     @classmethod
-    async def new_from_response_async(cls, response:aiohttp.ClientResponse) -> IWebPage:
+    async def new_from_response_async(
+        cls, response: aiohttp.ClientResponse
+    ) -> IWebPage:
         """
         Constructs a new WebPage object for the response,
         using the `BeautifulSoup` module to parse the HTML.

@@ -1,7 +1,6 @@
 import logging
 import random
 import time
-from urllib import response
 from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup as bs
 
@@ -35,7 +34,7 @@ class webParser:
         )
 
         self.user_param, self.password_param = self._findUserPass(
-            self.form, params_list["password_param"], params_list["user_param"]
+            self.form, params_list["passwordParam"], params_list["userParam"]
         )
 
         # performs 2 failed login attempts by choosing 2 random usernames from
@@ -87,7 +86,7 @@ class webParser:
 
     async def _getRequestData(self, req) -> None:
         """
-        fetch request method, url, body, response status_code, request headers
+        Fetch request method, url, body, response status_code, request headers
         """
 
         if req.method == "POST":
@@ -101,7 +100,7 @@ class webParser:
             for param in self.headers:
                 self.headers[param] = str(self.headers[param])
 
-            # remove content length and cookies from headers
+            # Remove content length and cookies from headers
             if "cookie" in self.headers:
                 self.headers.pop("cookie")
 
@@ -131,7 +130,7 @@ class webParser:
 
     def formScore(self, form, button, buttonList, loginTexts) -> float:
         """
-        gives each form a score on how likely it being the login
+        Gives each form a score on how likely it being the login
         form based on the form's button id, name, value, the forms structure and texts
         found in the form such as "login" or "sign in"
         """
@@ -213,7 +212,7 @@ class webParser:
         self.button_attr = button_att
 
     def _get_req_type(self) -> str:
-        """get content type from headers"""
+        """Get content type from headers"""
         type = self.headers["content-type"]
 
         if "json" in type:
@@ -230,7 +229,7 @@ class webParser:
 
     def _pass_gen(self) -> str:
         """
-        generate strong password randomly
+        Generate strong password randomly
         """
         char_seq = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
         password = ""
@@ -244,12 +243,12 @@ class webParser:
         return final_password
 
     def _pick_param(self, inputs, list):
-        """ "param with max potential for being the username or password"""
+        """ "Param with max potential for being the username or password"""
         inputName = max(inputs, key=lambda x: self._similarity_value(x, list))
         return inputName
 
     def _jaccard_similarity(self, a, b):
-        # convert to set
+        # Convert to set
         a = set(a)
         b = set(b)
         # calucate jaccard similarity
